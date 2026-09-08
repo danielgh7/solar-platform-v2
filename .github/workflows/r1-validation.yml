@@ -1,0 +1,36 @@
+name: R1 validation
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm install
+      - name: Test deterministic R1 logic
+        run: npm test
+      - name: Build
+        run: npm run build
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Launch preview
+        run: |
+          npm run preview -- --host 127.0.0.1 > /tmp/r1-vite.log 2>&1 &
+          npx wait-on http://127.0.0.1:4173
+      - name: Capture affected R1 routes
+        run: npm run capture:r1
+      - name: Commit R1 screenshots
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add artifacts/screenshots/r1
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore: add R1 validation screenshots [skip ci]"
+          git push
