@@ -1,0 +1,13 @@
+export type PVModuleElectricalSpec={id:string;manufacturer:string;model:string;pmaxW:number;vocV:number;vmpV:number;iscA:number;impA:number;tempCoeffVocPctPerC:number;tempCoeffPmaxPctPerC:number;maxSystemVoltageV:number;fixture:true};
+export type MPPTSpec={count:number;inputsPerMppt:number;minVoltageV:number;maxVoltageV:number;startupVoltageV:number;maxInputCurrentA:number;maxShortCircuitCurrentA?:number};
+export type InverterSpec={id:string;manufacturer:string;model:string;ratedAcKw:number;maxDcInputKw?:number;maxDcVoltageV:number;mppt:MPPTSpec;nominalEfficiency:number;maxEfficiency:number;fixture:true};
+export type InverterInstance={id:string;specId:string;name:string};
+export type StringCircuit={id:string;name:string;colorIndex:number;moduleIds:string[];inverterId?:string;mpptIndex?:number};
+export type StringAssignment={moduleId:string;stringId:string};
+export type ElectricalValidationIssue={id:string;severity:'error'|'warning'|'info';code:string;message:string;stringId?:string;inverterId?:string;mpptIndex?:number};
+export type ProductionAssumptions={minimumDesignTempC:number;stcTempC:number;moduleVocTempCoeffPctPerC:number;soilingPct:number;mismatchPct:number;wiringPct:number;availabilityPct:number;userShadingPct:number;year1DegradationPct:number;inverterEfficiencyPct:number};
+export type MonthlyResource={month:number;label:string;specificYieldKwhPerKwp:number};
+export type MonthlyProductionResult={month:number;label:string;specificYieldInput:number;productionKwh:number;consumptionKwh:number;balanceKwh:number};
+export type AnnualProductionSummary={installedDcKwp:number;annualProductionKwh:number;annualConsumptionKwh:number;specificYieldKwhPerKwp:number;energyOffsetPct:number;effectiveLossPct:number;capacityFactorPct:number};
+export type ElectricalDesign={version:3;projectId:string;selectedModuleSpecId:string;inverters:InverterInstance[];strings:StringCircuit[];assumptions:ProductionAssumptions;resource:MonthlyResource[];resourceLabel:string;updatedAt:string};
+export type ElectricalDerived={placedModules:number;assignedModules:number;unassignedModules:number;placedDcKwp:number;inverterAcKw:number;dcAcRatio:number;issues:ElectricalValidationIssue[];valid:boolean};
