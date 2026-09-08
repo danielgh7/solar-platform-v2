@@ -1,0 +1,3 @@
+import type {Camera,Coordinate2D} from './types';
+export function worldToScreen(p:Coordinate2D,camera:Camera,viewport:{width:number;height:number},world:{width:number;height:number}={width:30,height:20}){const sx=viewport.width/world.width*camera.zoom,sy=viewport.height/world.height*camera.zoom;return{x:p.x*sx+camera.panX,y:p.y*sy+camera.panY};}
+export function screenToWorld(p:Coordinate2D,camera:Camera,viewport:{width:number;height:number},world:{width:number;height:number}={width:30,height:20}){const sx=viewport.width/world.width*camera.zoom,sy=viewport.height/world.height*camera.zoom;return{x:(p.x-camera.panX)/sx,y:(p.y-camera.panY)/sy};}

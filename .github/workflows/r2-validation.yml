@@ -1,0 +1,39 @@
+name: R2 validation
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm install
+      - name: Test R1 + R2 deterministic logic
+        run: npm test
+      - name: Build
+        run: npm run build
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Launch preview
+        run: |
+          npm run preview -- --host 127.0.0.1 > /tmp/r2-vite.log 2>&1 &
+          npx wait-on http://127.0.0.1:4173
+      - name: Browser R2 validation
+        run: npm run validate:r2
+      - name: Capture R2 states
+        run: npm run capture:r2
+      - name: Commit R2 screenshots
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add artifacts/screenshots/r2
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore: add R2 validation screenshots [skip ci]"
+          git pull --rebase origin main
+          git push

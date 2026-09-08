@@ -1,9 +1,9 @@
 {
   "name":"solar-platform-v2",
   "private":true,
-  "version":"0.1.0-r1",
+  "version":"0.2.0-r2",
   "type":"module",
-  "scripts":{"dev":"vite","build":"tsc -b && vite build","test":"vitest run","preview":"vite preview","capture:r0":"node scripts/capture-r0.mjs","capture:r1":"node scripts/capture-r1.mjs"},
+  "scripts":{"dev":"vite","build":"tsc -b && vite build","test":"vitest run","preview":"vite preview","capture:r0":"node scripts/capture-r0.mjs","capture:r1":"node scripts/capture-r1.mjs","capture:r2":"node scripts/capture-r2.mjs","validate:r2":"node scripts/validate-r2.mjs"},
   "dependencies":{"@vitejs/plugin-react":"latest","lucide-react":"latest","react":"latest","react-dom":"latest","react-router-dom":"latest","recharts":"latest"},
   "devDependencies":{"@types/react":"latest","@types/react-dom":"latest","typescript":"latest","vite":"latest","vitest":"latest","playwright":"latest"}
 }
