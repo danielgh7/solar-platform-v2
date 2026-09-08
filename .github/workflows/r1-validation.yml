@@ -24,6 +24,8 @@ jobs:
         run: |
           npm run preview -- --host 127.0.0.1 > /tmp/r1-vite.log 2>&1 &
           npx wait-on http://127.0.0.1:4173
+      - name: Browser completion validation
+        run: node scripts/validate-r1.mjs
       - name: Capture affected R1 routes
         run: npm run capture:r1
       - name: Commit R1 screenshots
