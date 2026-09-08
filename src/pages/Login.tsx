@@ -1,0 +1,8 @@
+import { ArrowRight, Check, Sun } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Logo } from '../components/Shell';
+
+export function Login(){
+  const nav=useNavigate();
+  return <main className="login-page"><section className="login-preview"><Logo dark/><div className="preview-copy"><span className="eyebrow">SOLAR PROJECT WORKSPACE</span><h1>From CFE baseline<br/>to build-ready design.</h1><p>A focused workspace for sizing, designing and presenting distributed solar projects in Mexico.</p></div><div className="design-preview"><div className="preview-roof"><div className="preview-setback"/>{Array.from({length:16},(_,i)=><i key={i} style={{left:`${28+(i%4)*12}%`,top:`${24+Math.floor(i/4)*14}%`}}/>)}</div><div className="preview-metrics"><span><small>PV SIZE</small><b>10.24 kWp</b></span><span><small>MODULES</small><b>16</b></span><span><small>OFFSET</small><b>94.2%</b></span></div></div><footer><Sun size={14}/> Engineering workspace · Mexico</footer></section><section className="login-panel"><div className="login-form"><span className="eyebrow">SIGN IN</span><h2>Open your solar workspace</h2><p>Continue to active projects and engineering work.</p><label>Email<input defaultValue="daniel@enertika.mx"/></label><label>Password<input type="password" defaultValue="12345678"/></label><label className="remember"><span><input type="checkbox" defaultChecked/> Keep me signed in</span><a>Forgot password?</a></label><button className="primary full" onClick={()=>nav('/projects')}>Sign in <ArrowRight size={15}/></button><small className="secure"><Check size={13}/> Secure project workspace</small></div></section></main>;
+}
