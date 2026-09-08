@@ -1,0 +1,40 @@
+name: R0 visual review
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'artifacts/screenshots/r0/**'
+permissions:
+  contents: write
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm install
+      - name: Build
+        run: npm run build
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Launch preview
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/r0-vite.log 2>&1 &
+          sleep 3
+      - name: Capture R0 screens
+        run: npm run capture:r0
+      - name: Commit review screenshots
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add artifacts/screenshots/r0
+          if git diff --cached --quiet; then
+            echo "No screenshot changes"
+          else
+            git commit -m "chore: add R0 visual review screenshots [skip ci]"
+            git push
+          fi
