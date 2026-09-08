@@ -5,4 +5,5 @@ import App from './App';
 import './styles.css';
 import './r1.css';
 import './r2.css';
+import './r2-fixes.css';
 ReactDOM.createRoot(document.getElementById('root')!).render(<React.StrictMode><BrowserRouter><App/></BrowserRouter></React.StrictMode>);
