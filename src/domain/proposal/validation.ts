@@ -3,7 +3,7 @@ import type {ProposalValidationIssue,ProposalVersion} from './types';
 export function validateProposal(version:ProposalVersion,currentFingerprint:string,o:AcceptedProjectOutputs):ProposalValidationIssue[]{const x:ProposalValidationIssue[]=[];const error=(id:string,message:string)=>x.push({id,severity:'error',code:id,message});const warn=(id:string,message:string)=>x.push({id,severity:'warning',code:id,message});
 if(!version.customer.customerName.trim())error('missing-customer','Customer/company display name is required.');
 if(!version.customer.projectName.trim())error('missing-project-name','Project/site display name is required.');
-if(o.r1Quality==='Incomplete')error('r1-incomplete','R1 consumption is incomplete.');else if(o.r1Quality==='Needs review')warn('r1-needs-review','R1 consumption has review warnings that remain visible in this proposal workflow.');
+if(o.r1Quality==='Incomplete')error('r1-not-ready','R1 consumption is incomplete.');else if(o.r1Quality==='Needs review')warn('r1-needs-review','R1 consumption has review warnings that remain visible in this proposal workflow.');
 if(!o.design.roofs.length||!o.design.layout.placements.length)error('r2-no-design','A valid R2 roof design with placed modules is required.');
 if(o.r3Issues.some(i=>i.severity==='error'))error('r3-electrical-errors','R3 electrical design has blocking errors.');else if(o.r3Issues.some(i=>i.severity==='warning'))warn('r3-electrical-warning','R3 electrical design has non-blocking warnings.');
 if(!(o.r3Summary.annualProductionKwh>0))error('r3-no-production','R3 annual production output is missing or invalid.');
