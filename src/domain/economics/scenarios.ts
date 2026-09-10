@@ -1,0 +1,6 @@
+import type {EconomicScenario,FinancialAssumptions,SolarValueAssumptions} from './types';
+export function buildScenarios(financial:FinancialAssumptions,solar:SolarValueAssumptions):EconomicScenario[]{return[
+{id:'conservative',name:'Conservative',description:'Lower escalation, zero export value, higher O&M/discount rate and +5% investment stress.',financial:{...financial,electricityEscalationPct:Math.min(financial.electricityEscalationPct,2),annualOmCostMxn:Math.max(financial.annualOmCostMxn,6000),discountRatePct:Math.max(financial.discountRatePct,12)},solarValue:{...solar,exportMode:'zero'},pricingFactor:1.05},
+{id:'base',name:'Base / Recommended',description:'Current editable project assumptions.',financial:{...financial},solarValue:{...solar},pricingFactor:1},
+{id:'optimistic',name:'Optimistic',description:'Higher escalation, lower discount rate and -5% investment stress; export uses current mode unless zero, then custom assumption remains zero.',financial:{...financial,electricityEscalationPct:Math.max(financial.electricityEscalationPct,6),annualOmCostMxn:Math.min(financial.annualOmCostMxn,3000),discountRatePct:Math.min(financial.discountRatePct,8)},solarValue:{...solar},pricingFactor:.95}
+];}
