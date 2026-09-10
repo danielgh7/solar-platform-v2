@@ -5,6 +5,9 @@ on:
     paths-ignore:
       - 'artifacts/screenshots/r4/**'
   workflow_dispatch:
+concurrency:
+  group: r4-validation-main
+  cancel-in-progress: true
 permissions:
   contents: write
 jobs:
