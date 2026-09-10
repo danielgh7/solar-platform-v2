@@ -1,0 +1,50 @@
+name: R5 validation
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'artifacts/screenshots/r5/**'
+      - 'artifacts/pdf/r5/**'
+  workflow_dispatch:
+concurrency:
+  group: r5-validation-main
+  cancel-in-progress: true
+permissions:
+  contents: write
+jobs:
+  review:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm install
+      - name: Test R1-R5 deterministic logic and privacy rules
+        run: npm test
+      - name: Build
+        run: npm run build
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Launch preview
+        run: |
+          npm run preview -- --host 127.0.0.1 > /tmp/r5-vite.log 2>&1 &
+          npx wait-on http://127.0.0.1:4173
+      - name: Browser R5 validation and real PDF download
+        run: npm run validate:r5
+      - name: Validate generated PDF structure, text and privacy
+        run: npm run validate:r5-pdf
+      - name: Capture 12 R5 final browser states
+        run: npm run capture:r5
+      - name: Revalidate captured PDF artifact
+        run: npm run validate:r5-pdf
+      - name: Commit R5 evidence
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add artifacts/screenshots/r5 artifacts/pdf/r5
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore: add R5 proposal and PDF evidence [skip ci]"
+          git pull --rebase origin main
+          git push
