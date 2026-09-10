@@ -2,7 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { Shell } from './components/Shell';
 import { SolarDesignerR3 } from './components/SolarDesignerR3';
 import { Consumption } from './pages/Consumption';
-import { Economics } from './pages/Economics';
+import { EconomicsR4 } from './pages/EconomicsR4';
 import { Equipment } from './pages/Equipment';
 import { Login } from './pages/Login';
 import { NewProject } from './pages/NewProject';
@@ -21,7 +21,7 @@ export default function App(){
       <Route path="/projects/:id/consumption" element={<Consumption/>}/>
       <Route path="/projects/:id/design" element={<SolarDesignerR3/>}/>
       <Route path="/projects/:id/equipment" element={<Equipment/>}/>
-      <Route path="/projects/:id/economics" element={<Economics/>}/>
+      <Route path="/projects/:id/economics" element={<EconomicsR4/>}/>
       <Route path="/projects/:id/proposal" element={<Proposal/>}/>
       <Route path="*" element={<Navigate to="/projects" replace/>}/>
     </Route>
