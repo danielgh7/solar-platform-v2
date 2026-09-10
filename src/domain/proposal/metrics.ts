@@ -9,4 +9,5 @@ export function customerSafeMetrics(s:ProposalProjectSnapshot){return{
  priceBeforeVat:s.investment.priceBeforeVat,vat:s.investment.vatMxn,totalIncludingVat:s.investment.totalIncludingVat,
  paybackYears:s.financial.simplePaybackYears,irrPct:s.financial.irrPct,npvMxn:s.financial.npvMxn,economicCase:s.financial.caseName,analysisHorizonYears:s.financial.analysisTermYears
 };}
-export function containsInternalField(value:unknown):boolean{const text=JSON.stringify(value).toLowerCase();return INTERNAL_ONLY_FIELDS.some(x=>text.includes(x.toLowerCase()));}
+const blocked=new Set<string>(INTERNAL_ONLY_FIELDS.map(x=>x.toLowerCase()));
+export function containsInternalField(value:unknown):boolean{if(value===null||typeof value!=='object')return false;if(Array.isArray(value))return value.some(containsInternalField);return Object.entries(value as Record<string,unknown>).some(([key,v])=>blocked.has(key.toLowerCase())||containsInternalField(v));}
