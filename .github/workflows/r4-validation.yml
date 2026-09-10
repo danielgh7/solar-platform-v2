@@ -32,6 +32,8 @@ jobs:
           npx wait-on http://127.0.0.1:4173
       - name: Browser R4 validation
         run: npm run validate:r4
+      - name: Browser R4 exact-scope completeness
+        run: node scripts/validate-r4-completeness.mjs
       - name: Capture R4 states
         run: npm run capture:r4
       - name: Commit R4 screenshots
