@@ -1,0 +1,18 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: solar
+      POSTGRES_PASSWORD: solar_dev
+      POSTGRES_DB: solar_platform_v2
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U solar -d solar_platform_v2"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - solar_platform_v2_pg:/var/lib/postgresql/data
+volumes:
+  solar_platform_v2_pg:
