@@ -1,0 +1,40 @@
+name: R6 validation
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  review:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm install
+      - name: Test R1–R6 deterministic logic
+        run: npm test
+      - name: Build
+        run: npm run build
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Launch preview
+        run: |
+          npm run preview -- --host 127.0.0.1 > /tmp/r6-vite.log 2>&1 &
+          npx wait-on http://127.0.0.1:4173
+      - name: Chromium R6 lifecycle validation
+        run: npm run validate:r6
+      - name: Realistic local dataset performance
+        run: npm run validate:r6-performance
+      - name: Capture 13 R6 final browser states
+        run: npm run capture:r6
+      - name: Commit R6 evidence
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add artifacts/screenshots/r6
+          git diff --cached --quiet || git commit -m "chore: add R6 CRM evidence [skip ci]"
+          git push

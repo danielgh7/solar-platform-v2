@@ -1,0 +1,14 @@
+import type {CrmState,Opportunity,OpportunitySourceId} from './types';
+import {stageById,orderedStages} from './pipeline';
+const days=(a:string,b:string)=>Math.max(0,(Date.parse(a)-Date.parse(b))/86400000);
+export function opportunityProbability(o:Opportunity,state:CrmState){return o.probabilityOverridePct??stageById(state.pipeline,o.stageId).probabilityPct}
+export function salesMetrics(state:CrmState,valueOf:(o:Opportunity)=>number,nowIso:string){
+ const open=state.opportunities.filter(o=>o.status==='open'),won=state.opportunities.filter(o=>o.status==='won'),lost=state.opportunities.filter(o=>o.status==='lost'),closed=won.length+lost.length;
+ const wonCycles=won.filter(o=>o.wonAt).map(o=>days(o.wonAt!,o.createdAt));
+ const stageDurations=state.stageHistory.map(h=>h.leftAt?days(h.leftAt,h.enteredAt):days(nowIso,h.enteredAt));
+ const proposalEntered=new Set(state.stageHistory.filter(h=>['proposal-sent','negotiation','won'].includes(h.stageId)).map(h=>h.opportunityId));
+ const proposalWon=won.filter(o=>proposalEntered.has(o.id)).length;
+ const source=new Map<OpportunitySourceId,{opportunities:number;wins:number;value:number}>();for(const o of state.opportunities){const r=source.get(o.sourceId)||{opportunities:0,wins:0,value:0};r.opportunities++;if(o.status==='won')r.wins++;r.value+=valueOf(o);source.set(o.sourceId,r)}
+ return{openOpportunities:open.length,pipelineValue:open.reduce((s,o)=>s+valueOf(o),0),weightedPipeline:open.reduce((s,o)=>s+valueOf(o)*opportunityProbability(o,state)/100,0),wonValue:won.reduce((s,o)=>s+valueOf(o),0),lostValue:lost.reduce((s,o)=>s+valueOf(o),0),winRatePct:closed?won.length/closed*100:null,averageDaysInStage:stageDurations.length?stageDurations.reduce((a,b)=>a+b,0)/stageDurations.length:null,averageSalesCycleDays:wonCycles.length?wonCycles.reduce((a,b)=>a+b,0)/wonCycles.length:null,proposalToWonPct:proposalEntered.size?proposalWon/proposalEntered.size*100:null,overdueTasks:state.tasks.filter(t=>t.status==='open'&&t.dueDate<nowIso.slice(0,10)).length,bySource:source};
+}
+export function funnelMetrics(state:CrmState,nowIso:string){const stages=orderedStages(state.pipeline);return stages.filter(s=>!['lost'].includes(s.id)).map((stage,i)=>{const entered=state.stageHistory.filter(h=>h.stageId===stage.id);const progressed=entered.filter(h=>h.leftAt&&state.stageHistory.some(n=>n.opportunityId===h.opportunityId&&stages.find(x=>x.id===n.stageId)!.order>stage.order)).length;const lost=entered.filter(h=>state.opportunities.find(o=>o.id===h.opportunityId)?.status==='lost').length;const durations=entered.map(h=>days(h.leftAt||nowIso,h.enteredAt)).sort((a,b)=>a-b);return{stageId:stage.id,label:stage.label,entered:entered.length,progressed,lost,conversionPct:entered.length?progressed/entered.length*100:null,averageDays:durations.length?durations.reduce((a,b)=>a+b,0)/durations.length:null,medianDays:durations.length?durations[Math.floor(durations.length/2)]:null,order:i}})}
