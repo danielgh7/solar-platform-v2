@@ -12,4 +12,5 @@ const schema=z.object({
 });
 export type ServerEnv=z.infer<typeof schema>;
 export function parseEnv(input:NodeJS.ProcessEnv):ServerEnv{return schema.parse(input)}
-export const env=parseEnv(process.env);
+const testDefaults:NodeJS.ProcessEnv={NODE_ENV:'test',DATABASE_URL:'postgres://solar:solar@127.0.0.1:5432/solar_platform_v2_test',SESSION_SECRET:'r7-vitest-isolated-session-secret-32chars'};
+export const env=parseEnv(process.env.NODE_ENV==='test'?{...testDefaults,...process.env}:process.env);
