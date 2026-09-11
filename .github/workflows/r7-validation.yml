@@ -1,0 +1,70 @@
+name: R7 validation
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  review:
+    runs-on: ubuntu-24.04
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: solar
+          POSTGRES_PASSWORD: solar_ci
+          POSTGRES_DB: solar_platform_v2
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U solar -d solar_platform_v2"
+          --health-interval 2s
+          --health-timeout 3s
+          --health-retries 20
+    env:
+      NODE_ENV: test
+      DATABASE_URL: postgres://solar:solar_ci@127.0.0.1:5432/solar_platform_v2
+      SESSION_SECRET: r7-ci-session-secret-${{ github.run_id }}-solar-platform
+      APP_ORIGIN: http://127.0.0.1:4173
+      PORT: 8787
+      VITE_API_URL: http://127.0.0.1:8787
+      R7_SEED_PASSWORD: r7-ci-${{ github.run_id }}-validation-password
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm install
+      - name: Clean database migration
+        run: npm run db:migrate
+      - name: Seed R7 tenant and representative R1-R6 state
+        run: npm run db:seed
+      - name: Test R0.1-R7 deterministic logic
+        run: npm test
+      - name: Database integration validation
+        run: npm run db:validate
+      - name: Build frontend and backend
+        run: npm run build
+      - name: Product string/i18n guard
+        run: npm run validate:r7-strings
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Launch API and production preview
+        run: |
+          npm run dev:api > /tmp/r7-api.log 2>&1 &
+          npm run preview -- --host 127.0.0.1 > /tmp/r7-vite.log 2>&1 &
+          npx wait-on http://127.0.0.1:8787/api/health http://127.0.0.1:4173
+      - name: Chromium R7 production-like validation
+        run: npm run validate:r7
+      - name: Capture 13 R7 browser states
+        run: npm run capture:r7
+      - name: Commit R7 evidence
+        if: github.event_name == 'push'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add artifacts/screenshots/r7
+          git diff --cached --quiet || git commit -m "chore: add R7 production evidence [skip ci]"
+          git push
