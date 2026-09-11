@@ -1,0 +1,11 @@
+import {z} from 'zod';
+export const localeSchema=z.enum(['es-MX','en-US']);
+export const signInSchema=z.object({email:z.string().email().max(320),password:z.string().min(8).max(200),organizationSlug:z.string().min(2).max(80).optional()}).strict();
+const hex=z.string().regex(/^#[0-9A-Fa-f]{6}$/);
+export const brandUpdateSchema=z.object({displayName:z.string().min(2).max(120),shortName:z.string().min(1).max(60),legalName:z.string().max(180).nullable().optional(),tagline:z.string().max(160),primaryColor:hex,secondaryColor:hex,accentColor:hex,graphiteColor:hex,darkGraphiteColor:hex,surfaceColor:hex,website:z.string().url().or(z.literal('')).nullable().optional(),email:z.string().email().or(z.literal('')).nullable().optional(),phone:z.string().max(40).nullable().optional(),footerText:z.string().max(280).nullable().optional(),defaultLocale:localeSchema,defaultCurrency:z.enum(['MXN','USD']),timezone:z.string().min(2).max(80),expectedVersion:z.number().int().positive()}).strict();
+export const projectStateSchema=z.object({schemaVersion:z.number().int().positive(),r1:z.unknown(),r2:z.unknown(),r3:z.unknown(),r4:z.unknown(),r5:z.unknown(),r6:z.unknown(),expectedVersion:z.number().int().nonnegative()}).strict();
+export const preferenceSchema=z.object({locale:localeSchema}).strict();
+export const proposalVersionSchema=z.object({proposalId:z.string().min(1).max(100),versionNumber:z.number().int().positive(),status:z.enum(['Draft','Ready','Exported','Frozen']),canonicalSnapshot:z.unknown(),brandingSnapshot:z.record(z.string(),z.unknown()),locale:localeSchema,pdfSha256:z.string().regex(/^[a-f0-9]{64}$/).nullable().optional(),expectedProjectVersion:z.number().int().positive().optional()}).strict();
+export const migrationPreviewSchema=z.object({formatVersion:z.literal(1),legacyWorkspaceId:z.string().min(1),projectId:z.string().min(1),records:z.record(z.string(),z.unknown())}).strict();
+export const wonSchema=z.object({expectedVersion:z.number().int().positive(),lossReasonId:z.string().optional(),explicitWin:z.literal(true)}).strict();
+export const handoffUpdateSchema=z.object({expectedVersion:z.number().int().positive(),payload:z.unknown()}).strict();
