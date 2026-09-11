@@ -30,9 +30,43 @@ jobs:
       PORT: 8787
       VITE_API_URL: http://127.0.0.1:8787
       R7_SEED_PASSWORD: r7-ci-${{ github.run_id }}-validation-password
-      R7_DIAGNOSTIC_SKIP_LOGO_INTEGRITY: '1'
     steps:
       - uses: actions/checkout@v4
+      - name: Recover exact official PNG and source fixes
+        shell: bash
+        run: |
+          set -euo pipefail
+          logo="src/assets/branding/buenos-dias-sol-by-enertika.png"
+          expected="92af3125cc33715e57c5f6129ae026eb9cf9ca9c75962ea5b3907fb0b74c10d5"
+          if ! file "$logo" | grep -q 'PNG image data'; then
+            base64 -d "$logo" > "$logo.decoded"
+            mv "$logo.decoded" "$logo"
+          fi
+          actual="$(sha256sum "$logo" | awk '{print $1}')"
+          test "$actual" = "$expected"
+          file "$logo" | grep -q 'PNG image data'
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('scripts/validate-r7.mjs')
+          s=p.read_text()
+          old="await page.waitForSelector('[data-testid=\"r7-projects\"]');assert((await page.locator('[data-testid=\"r7-projects\"]').innerText()).includes(PROJECT),'server-backed project missing');"
+          new="await page.waitForSelector('[data-testid=\"r7-projects\"]');await page.getByText(PROJECT,{exact:true}).waitFor({state:'visible'});assert((await page.locator('[data-testid=\"r7-projects\"]').innerText()).includes(PROJECT),'server-backed project missing');"
+          if old in s:
+              s=s.replace(old,new,1)
+              p.write_text(s)
+          elif new not in s:
+              raise SystemExit('Expected Chromium project readiness assertion not found')
+
+          p=Path('server/app.ts')
+          s=p.read_text()
+          marker="app.use('/api/orgs/:orgId',requireAuth,(req,res,next)=>{if(req.params.orgId!==req.auth!.organizationId)return res.status(403).json({error:{code:'FORBIDDEN'}});next()});"
+          anchor="app.post('/api/auth/sign-out',requireAuth,async(req,res,next)=>{try{await destroySession(req,res);res.status(204).end()}catch(e){next(e)}});app.get('/api/auth/me',requireAuth,(req,res)=>res.json(req.auth));"
+          if marker not in s:
+              if anchor not in s: raise SystemExit('Auth route anchor not found')
+              s=s.replace(anchor,anchor+marker,1)
+              p.write_text(s)
+          PY
+          echo "Official logo SHA-256 verified: $actual"
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -61,11 +95,11 @@ jobs:
         run: npm run validate:r7
       - name: Capture 13 R7 browser states
         run: npm run capture:r7
-      - name: Commit R7 evidence
+      - name: Commit R7 recovery evidence
         if: github.event_name == 'push'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add artifacts/screenshots/r7
-          git diff --cached --quiet || git commit -m "chore: add R7 production evidence [skip ci]"
+          git add artifacts/screenshots/r7 src/assets/branding/buenos-dias-sol-by-enertika.png scripts/validate-r7.mjs server/app.ts
+          git diff --cached --quiet || git commit -m "fix(r7): commit exact logo and validated production boundaries [skip ci]"
           git push
