@@ -1,0 +1,4 @@
+{
+  "compilerOptions":{"target":"ES2022","module":"NodeNext","moduleResolution":"NodeNext","esModuleInterop":true,"allowSyntheticDefaultImports":true,"strict":true,"skipLibCheck":true,"noEmit":true,"types":["node"],"jsx":"react-jsx"},
+  "include":["server/**/*.ts","scripts/seed-r7.ts","scripts/validate-r7-db.ts","src/domain/crm/**/*.ts"]
+}
