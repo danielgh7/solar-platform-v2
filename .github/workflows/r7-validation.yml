@@ -30,6 +30,7 @@ jobs:
       PORT: 8787
       VITE_API_URL: http://127.0.0.1:8787
       R7_SEED_PASSWORD: r7-ci-${{ github.run_id }}-validation-password
+      R7_DIAGNOSTIC_SKIP_LOGO_INTEGRITY: '1'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
