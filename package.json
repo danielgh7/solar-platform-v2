@@ -4,18 +4,10 @@
   "version":"0.7.0-r7",
   "type":"module",
   "scripts":{
-    "dev":"vite",
-    "dev:api":"tsx server/index.ts",
-    "build":"tsc -b && vite build && tsc -p tsconfig.server.json --noEmit",
-    "test":"vitest run",
-    "test:r7":"vitest run src/r7 server --passWithNoTests",
-    "db:migrate":"node scripts/db-migrate.mjs",
-    "db:seed":"tsx scripts/seed-r7.ts",
-    "db:validate":"tsx scripts/validate-r7-db.ts",
-    "preview":"vite preview",
+    "dev":"vite","dev:api":"tsx server/index.ts","build":"tsc -b && vite build && tsc -p tsconfig.server.json --noEmit","test":"vitest run","test:r7":"vitest run src/r7 server --passWithNoTests","db:migrate":"node scripts/db-migrate.mjs","db:seed":"tsx scripts/seed-r7.ts","db:validate":"tsx scripts/validate-r7-db.ts","preview":"vite preview",
     "capture:r0":"node scripts/capture-r0.mjs","capture:r1":"node scripts/capture-r1.mjs","capture:r2":"node scripts/capture-r2.mjs","capture:r3":"node scripts/capture-r3.mjs","capture:r4":"node scripts/capture-r4.mjs","capture:r5":"node scripts/capture-r5.mjs","capture:r6":"node scripts/capture-r6.mjs","capture:r7":"node scripts/capture-r7.mjs",
     "validate:r2":"node scripts/validate-r2.mjs","validate:r3":"node scripts/validate-r3.mjs","validate:r4":"node scripts/validate-r4.mjs","validate:r5":"node scripts/validate-r5.mjs","validate:r5-pdf":"node scripts/validate-r5-pdf.mjs","validate:r6":"node scripts/validate-r6.mjs","validate:r6-performance":"node scripts/validate-r6-performance.mjs","validate:r7":"node scripts/validate-r7.mjs","validate:r7-strings":"node scripts/validate-r7-strings.mjs"
   },
   "dependencies":{"@vitejs/plugin-react":"latest","bcryptjs":"latest","cookie-parser":"latest","cors":"latest","express":"latest","express-rate-limit":"latest","helmet":"latest","jspdf":"latest","lucide-react":"latest","multer":"latest","pg":"latest","react":"latest","react-dom":"latest","react-router-dom":"latest","recharts":"latest","zod":"latest"},
-  "devDependencies":{"@types/cookie-parser":"latest","@types/cors":"latest","@types/express":"latest","@types/multer":"latest","@types/node":"latest","@types/pg":"latest","@types/react":"latest","@types/react-dom":"latest","pdfjs-dist":"latest","playwright":"latest","tsx":"latest","typescript":"latest","vite":"latest","vitest":"latest"}
+  "devDependencies":{"@napi-rs/canvas":"latest","@types/cookie-parser":"latest","@types/cors":"latest","@types/express":"latest","@types/multer":"latest","@types/node":"latest","@types/pg":"latest","@types/react":"latest","@types/react-dom":"latest","pdfjs-dist":"latest","playwright":"latest","tsx":"latest","typescript":"latest","vite":"latest","vitest":"latest"}
 }
