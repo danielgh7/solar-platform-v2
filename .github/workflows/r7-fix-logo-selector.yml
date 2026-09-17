@@ -1,0 +1,28 @@
+name: R7 decoded logo selector fix
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  fix:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('scripts/validate-r7.mjs');s=p.read_text()
+          old="const logo=page.locator('.r7-brand-logo').first();await logo.waitFor({state:'visible'});await page.waitForFunction(()=>{const img=document.querySelector('.r7-brand-logo');return img instanceof HTMLImageElement&&img.complete&&img.naturalWidth===2048&&img.naturalHeight===682});const logoMetrics=await logo.evaluate(img=>({naturalWidth:img.naturalWidth,naturalHeight:img.naturalHeight,width:img.getBoundingClientRect().width,height:img.getBoundingClientRect().height}));"
+          new="await page.locator('.r7-brand-logo').first().waitFor({state:'visible'});await page.waitForFunction(()=>[...document.querySelectorAll('.r7-brand-logo')].some(img=>img instanceof HTMLImageElement&&img.complete&&img.naturalWidth===2048&&img.naturalHeight===682&&img.getBoundingClientRect().width>0));const logoMetrics=await page.evaluate(()=>{const img=[...document.querySelectorAll('.r7-brand-logo')].find(x=>x instanceof HTMLImageElement&&x.complete&&x.naturalWidth===2048&&x.naturalHeight===682&&x.getBoundingClientRect().width>0);if(!(img instanceof HTMLImageElement))throw new Error('decoded official logo not visible');return{naturalWidth:img.naturalWidth,naturalHeight:img.naturalHeight,width:img.getBoundingClientRect().width,height:img.getBoundingClientRect().height}});"
+          assert old in s
+          p.write_text(s.replace(old,new))
+          PY
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add scripts/validate-r7.mjs
+          git commit -m "fix(r7): validate visible decoded official logo instance"
+          git push
