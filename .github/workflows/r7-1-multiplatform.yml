@@ -50,7 +50,7 @@ jobs:
         with: {node-version: 22}
       - run: npm install && npm run build:web
       - run: npx cap add ios && npx cap sync ios
-      - run: xcodebuild -workspace ios/App/App.xcworkspace -scheme App -sdk iphonesimulator -configuration Debug CODE_SIGNING_ALLOWED=NO build
+      - run: xcodebuild -project ios/App/App.xcodeproj -scheme App -sdk iphonesimulator -configuration Debug CODE_SIGNING_ALLOWED=NO build
   desktop:
     strategy:
       matrix:
