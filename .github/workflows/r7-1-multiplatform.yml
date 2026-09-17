@@ -63,6 +63,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - run: npm install
       - run: node scripts/generate-r7-1-icons.mjs
+      - run: npm run tauri icon src-tauri/icons/512x512.png
       - uses: tauri-apps/tauri-action@v0
         env:
           VITE_API_URL: https://staging.invalid.example
