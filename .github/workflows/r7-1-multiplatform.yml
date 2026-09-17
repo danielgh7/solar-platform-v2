@@ -60,7 +60,7 @@ jobs:
         with: {node-version: 22}
       - uses: dtolnay/rust-toolchain@stable
       - run: npm install
-      - run: npx pwa-assets-generator --preset minimal-2023 src/assets/branding/buenos-dias-sol-by-enertika.png --out-dir src-tauri/icons
+      - run: node scripts/generate-r7-1-icons.mjs
       - uses: tauri-apps/tauri-action@v0
         env:
           VITE_API_URL: https://staging.invalid.example
