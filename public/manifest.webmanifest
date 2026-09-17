@@ -1,1 +1,25 @@
-{"name":"Buenos días sol by Enertika","short_name":"Buenos días sol","description":"Plataforma profesional de ingeniería y operación solar","start_url":"/","display":"standalone","background_color":"#ffffff","theme_color":"#0295BF","lang":"es-MX","scope":"/","icons":[]}
+{
+  "name": "Buenos días sol by Enertika",
+  "short_name": "Buenos días sol",
+  "description": "Plataforma profesional de ingeniería y operación solar",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0295BF",
+  "lang": "es-MX",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
