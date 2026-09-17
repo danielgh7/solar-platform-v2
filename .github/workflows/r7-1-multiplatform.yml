@@ -26,6 +26,7 @@ jobs:
         with: {node-version: 22}
       - run: npm install
       - run: npm audit --omit=dev --audit-level=high
+      - run: test -z "$(grep -R -E 'DATABASE_URL|SESSION_SECRET|R7_SEED_PASSWORD' dist 2>/dev/null || true)"
       - run: node scripts/generate-r7-1-icons.mjs
       - run: cp src-tauri/icons/192x192.png public/pwa-192x192.png && cp src-tauri/icons/512x512.png public/pwa-512x512.png
       - run: npm run db:migrate && npm run db:seed && npm test && npm run db:validate && npm run build
