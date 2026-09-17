@@ -15,13 +15,10 @@ jobs:
           POSTGRES_USER: solar
           POSTGRES_PASSWORD: solar_ci
           POSTGRES_DB: solar_platform_v2
-        ports:
-          - 5432:5432
+        ports: ['5432:5432']
         options: >-
           --health-cmd "pg_isready -U solar -d solar_platform_v2"
-          --health-interval 2s
-          --health-timeout 3s
-          --health-retries 20
+          --health-interval 2s --health-timeout 3s --health-retries 20
     env:
       NODE_ENV: test
       DATABASE_URL: postgres://solar:solar_ci@127.0.0.1:5432/solar_platform_v2
@@ -32,17 +29,54 @@ jobs:
       R7_SEED_PASSWORD: r7-ci-${{ github.run_id }}-validation-password
     steps:
       - uses: actions/checkout@v4
-      - name: Inspect official logo payload
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - name: Verify exact official branding asset
         shell: bash
         run: |
           set -euo pipefail
-          logo="src/assets/branding/buenos-dias-sol-by-enertika.png"
-          echo "source: $(file "$logo")"
-          echo "source-size: $(wc -c < "$logo")"
-          echo "source-sha: $(sha256sum "$logo" | awk '{print $1}')"
-          base64 -d "$logo" > /tmp/logo.decoded
-          echo "decoded: $(file /tmp/logo.decoded)"
-          echo "decoded-size: $(wc -c < /tmp/logo.decoded)"
-          echo "decoded-sha: $(sha256sum /tmp/logo.decoded | awk '{print $1}')"
-          echo -n "decoded-head: "; xxd -p -l 32 /tmp/logo.decoded
-          exit 1
+          logo=src/assets/branding/buenos-dias-sol-by-enertika.png
+          test -f "$logo"
+          test "$(wc -c < "$logo")" -eq 254968
+          test "$(sha256sum "$logo" | awk '{print $1}')" = "92af3125cc33715e57c5f6129ae026eb9cf9ca9c75962ea5b3907fb0b74c10d5"
+          file "$logo" | grep -q 'PNG image data, 2048 x 682'
+      - name: Install dependencies
+        run: npm install
+      - name: Clean PostgreSQL migrations
+        run: npm run db:migrate
+      - name: Seed representative R1-R6 production state
+        run: npm run db:seed
+      - name: Test R0.1-R7 deterministic logic
+        run: npm test
+      - name: Database integration validation
+        run: npm run db:validate
+      - name: Frontend/backend typecheck and production build
+        run: npm run build
+      - name: Product string/i18n guard
+        run: npm run validate:r7-strings
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Launch API and production preview
+        run: |
+          npm run dev:api > /tmp/r7-api.log 2>&1 &
+          npm run preview -- --host 127.0.0.1 > /tmp/r7-vite.log 2>&1 &
+          npx wait-on http://127.0.0.1:8787/api/health http://127.0.0.1:4173
+      - name: Chromium R7 production-like validation
+        run: npm run validate:r7
+      - name: Capture 13 R7 browser states and real branded PDF
+        run: npm run capture:r7
+      - name: Verify final evidence set
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(find artifacts/screenshots/r7 -maxdepth 1 -type f -name '*.png' | wc -l)" -eq 13
+          test -s artifacts/pdf/r7/proposal-residencia-montebello-r7.pdf
+          test -s R7_REVIEW.md
+      - name: Commit final R7 evidence
+        if: github.event_name == 'push' && github.actor != 'github-actions[bot]'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add artifacts/screenshots/r7 artifacts/pdf/r7 R7_REVIEW.md
+          git diff --cached --quiet || git commit -m "chore(r7): add final production evidence"
+          git push
