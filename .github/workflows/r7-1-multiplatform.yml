@@ -1,7 +1,5 @@
 name: R7.1 multiplatform
 on:
-  push:
-    branches: [r7.1-issue-11]
   workflow_dispatch:
 jobs:
   regression:
