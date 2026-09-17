@@ -1,0 +1,2 @@
+# Mobile release
+Android/iOS use Capacitor and the same built web assets/API. Android CI produces a debug APK and validates the release AAB build path; signing must use CI secrets/Play keystore. iOS CI compiles an unsigned simulator target where available. App Store/TestFlight requires Apple Developer team/certificates/profiles. Camera/files/share permissions are requested only when invoked. Store publication is not claimed by R7.1.
