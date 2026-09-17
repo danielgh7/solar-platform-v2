@@ -60,6 +60,8 @@ jobs:
       - run: npm run build:web
       - run: npx cap add ios && npx cap sync ios
       - run: xcodebuild -project ios/App/App.xcodeproj -scheme App -sdk iphonesimulator -configuration Debug CODE_SIGNING_ALLOWED=NO build
+      - uses: actions/upload-artifact@v4
+        with: {name: ios-simulator-build, path: ~/Library/Developer/Xcode/DerivedData/**/Build/Products/Debug-iphonesimulator/*.app}
   desktop:
     strategy:
       matrix:
