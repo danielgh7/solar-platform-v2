@@ -1,0 +1,31 @@
+name: R7 materialize official logo
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  materialize:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Move exact uploaded binary into canonical branding path
+        shell: bash
+        run: |
+          set -euo pipefail
+          source_file="adfaf359-d4fd-433c-996a-2d49d38dbeae.png"
+          target="src/assets/branding/buenos-dias-sol-by-enertika.png"
+          expected="92af3125cc33715e57c5f6129ae026eb9cf9ca9c75962ea5b3907fb0b74c10d5"
+          test -f "$source_file"
+          test "$(wc -c < "$source_file")" -eq 254968
+          test "$(sha256sum "$source_file" | awk '{print $1}')" = "$expected"
+          file "$source_file" | grep -q 'PNG image data, 2048 x 682'
+          mkdir -p "$(dirname "$target")"
+          mv "$source_file" "$target"
+          test "$(sha256sum "$target" | awk '{print $1}')" = "$expected"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "fix(r7): install exact official branding asset"
+          git push
