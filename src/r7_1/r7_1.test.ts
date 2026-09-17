@@ -1,0 +1,2 @@
+import{describe,it,expect}from'vitest';import{safeExternalUrl}from'../platform/types';import{APP_VERSION,API_COMPATIBILITY}from'./version';
+describe('R7.1 distribution foundation',()=>{it('uses unified version',()=>{expect(APP_VERSION).toBe('0.7.1');expect(API_COMPATIBILITY).toBe('7.1')});it('rejects unsafe navigation',()=>{expect(()=>safeExternalUrl('javascript:alert(1)')).toThrow();expect(safeExternalUrl('https://example.com')).toContain('https://example.com')})});
