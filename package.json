@@ -76,6 +76,7 @@
     "@capacitor/android": "latest",
     "@capacitor/ios": "latest",
     "@tauri-apps/cli": "latest",
-    "@vite-pwa/assets-generator": "latest"
+    "@vite-pwa/assets-generator": "latest",
+    "vite-plugin-pwa": "latest"
   }
 }
