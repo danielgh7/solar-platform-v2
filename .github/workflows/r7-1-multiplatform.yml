@@ -46,6 +46,7 @@ jobs:
       - run: npm run build:web
       - run: npx cap add android && npx cap sync android
       - run: cd android && ./gradlew assembleDebug bundleRelease
+      - run: test -s android/app/build/outputs/apk/debug/app-debug.apk && test -s android/app/build/outputs/bundle/release/app-release.aab
       - uses: actions/upload-artifact@v4
         with: {name: android-builds, path: android/app/build/outputs/**}
   ios:
@@ -79,6 +80,10 @@ jobs:
       - uses: tauri-apps/tauri-action@v0
         env:
           VITE_API_URL: https://staging.invalid.example
+      - name: Verify desktop distributables
+        shell: bash
+        run: |
+          if [[ "${{ matrix.os }}" == windows-* ]]; then find src-tauri/target/release/bundle -type f \( -name '*.msi' -o -name '*setup.exe' \) | grep -q .; else find src-tauri/target/release/bundle -type f -name '*.dmg' | grep -q . && find src-tauri/target/release/bundle -type d -name '*.app' | grep -q .; fi
       - uses: actions/upload-artifact@v4
         with:
           name: desktop-${{ matrix.os }}
