@@ -34,7 +34,8 @@
     "native:android": "npm run build:web && cap sync android",
     "native:ios": "npm run build:web && cap sync ios",
     "desktop:build": "tauri build",
-    "validate:r7-1": "vitest run src/r7_1 src/platform --passWithNoTests"
+    "validate:r7-1": "vitest run src/r7_1 src/platform --passWithNoTests",
+    "tauri": "tauri"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
