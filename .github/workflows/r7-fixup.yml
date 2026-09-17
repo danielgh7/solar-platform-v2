@@ -1,0 +1,42 @@
+name: R7 deterministic fixup
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  fixup:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply R7 isolation and deterministic Chromium fixes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('server/app.ts')
+          s=p.read_text()
+          marker="app.post('/api/auth/sign-out',requireAuth,async(req,res,next)=>{try{await destroySession(req,res);res.status(204).end()}catch(e){next(e)}});app.get('/api/auth/me',requireAuth,(req,res)=>res.json(req.auth));"
+          replacement=marker+"app.use('/api/orgs/:orgId',requireAuth,(req,res,next)=>{if(req.params.orgId!==req.auth!.organizationId)return res.status(404).json({error:{code:'NOT_FOUND'}});next()});"
+          if "req.params.orgId!==req.auth!.organizationId" not in s:
+              assert marker in s
+              s=s.replace(marker,replacement)
+          p.write_text(s)
+
+          p=Path('scripts/validate-r7.mjs')
+          s=p.read_text()
+          s=s.replace("await page.waitForSelector('[data-testid=\"r7-projects\"]');assert((await page.locator('[data-testid=\"r7-projects\"]').innerText()).includes(PROJECT),'server-backed project missing');","await page.locator('[data-testid=\"r7-projects\"]').getByText(PROJECT,{exact:false}).waitFor({state:'visible'});assert((await page.locator('[data-testid=\"r7-projects\"]').innerText()).includes(PROJECT),'server-backed project missing');")
+          s=s.replace("await page.getByLabel('Idioma').selectOption('en-US');await page.waitForTimeout(80);assert((await page.locator('.topnav').innerText()).includes('Projects'),'en-US switch failed');","await page.getByLabel('Idioma').selectOption('en-US');await page.locator('.topnav').getByText('Projects',{exact:true}).waitFor({state:'visible'});assert((await page.locator('.topnav').innerText()).includes('Projects'),'en-US switch failed');")
+          s=s.replace("await page.getByLabel('Idioma').selectOption('es-MX');await page.waitForTimeout(80);assert((await page.locator('.topnav').innerText()).includes('Proyectos'),'es-MX restore failed');","await page.getByLabel('Idioma').selectOption('es-MX');await page.locator('.topnav').getByText('Proyectos',{exact:true}).waitFor({state:'visible'});assert((await page.locator('.topnav').innerText()).includes('Proyectos'),'es-MX restore failed');")
+          s=s.replace("await page.getByRole('button',{name:'Guardar cambios'}).click();await page.waitForTimeout(100);assert((await page.locator('.r7-save-state').getAttribute('data-state'))==='conflict','explicit UI concurrency conflict missing');","await page.getByRole('button',{name:'Guardar cambios'}).click();await page.locator('.r7-save-state[data-state=\"conflict\"]').waitFor({state:'visible'});assert((await page.locator('.r7-save-state').getAttribute('data-state'))==='conflict','explicit UI concurrency conflict missing');")
+          s=s.replace("await page.getByLabel('Idioma').selectOption('en-US');await page.waitForTimeout(50);await seedR5Project(page,base);await page.getByLabel('Idioma').selectOption('es-MX');await page.waitForTimeout(80);","await page.getByLabel('Idioma').selectOption('en-US');await page.locator('.topnav').getByText('Projects',{exact:true}).waitFor({state:'visible'});await seedR5Project(page,base);await page.getByLabel('Idioma').selectOption('es-MX');await page.locator('.topnav').getByText('Proyectos',{exact:true}).waitFor({state:'visible'});")
+          assert 'waitForTimeout' not in s
+          p.write_text(s)
+          PY
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add server/app.ts scripts/validate-r7.mjs
+          git diff --cached --quiet || git commit -m "fix(r7): enforce tenant boundary and deterministic Chromium waits"
+          git push
