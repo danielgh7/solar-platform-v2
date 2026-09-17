@@ -30,6 +30,10 @@ jobs:
       - run: cp src-tauri/icons/192x192.png public/pwa-192x192.png && cp src-tauri/icons/512x512.png public/pwa-512x512.png
       - run: npm run db:migrate && npm run db:seed && npm test && npm run db:validate && npm run build
       - run: npm run validate:r7-1
+      - run: npx playwright install --with-deps chromium
+      - run: npm run preview -- --host 127.0.0.1 > /tmp/r71-vite.log 2>&1 & npx wait-on http://127.0.0.1:4173 && node scripts/capture-r7-1.mjs
+      - uses: actions/upload-artifact@v4
+        with: {name: r7-1-responsive-evidence, path: artifacts/r7.1}
       - uses: actions/upload-artifact@v4
         with: {name: web-dist, path: dist}
   android:
