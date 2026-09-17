@@ -34,6 +34,7 @@ jobs:
       - run: npm run preview -- --host 127.0.0.1 > /tmp/r71-vite.log 2>&1 & npx wait-on http://127.0.0.1:4173 && node scripts/capture-r7-1.mjs
       - uses: actions/upload-artifact@v4
         with: {name: r7-1-responsive-evidence, path: artifacts/r7.1}
+      - run: find artifacts/r7.1 -type f -maxdepth 1 -print0 | sort -z | xargs -0 sha256sum > artifacts/r7.1/SHA256SUMS.txt
       - uses: actions/upload-artifact@v4
         with: {name: web-dist, path: dist}
   android:
