@@ -1,0 +1,2 @@
+# Desktop release
+Tauri 2 packages the shared client. Windows builds an installer where runner tooling permits; trusted signing requires an external certificate. macOS builds an app/distributable on available hosted architecture; Apple Silicon is required for final release evidence. Universal packaging can combine architecture artifacts. Distribution signing/notarization requires Apple Developer credentials. Shell execution is not enabled.
