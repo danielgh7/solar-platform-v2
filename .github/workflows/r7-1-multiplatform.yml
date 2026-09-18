@@ -15,6 +15,7 @@ jobs:
     env:
       NODE_ENV: test
       DATABASE_URL: postgres://solar:solar_ci@127.0.0.1:5432/solar_platform_v2
+      DATABASE_SSL: disable
       SESSION_SECRET: r71-ci-session-secret-${{ github.run_id }}-solar-platform
       APP_ORIGIN: http://127.0.0.1:4173
       PORT: 8787
