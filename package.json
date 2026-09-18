@@ -42,7 +42,7 @@
     "bcryptjs": "latest",
     "cookie-parser": "latest",
     "cors": "latest",
-    "express": "4.21.2",
+    "express": "^4.22.3",
     "express-rate-limit": "latest",
     "helmet": "latest",
     "jspdf": "latest",
