@@ -5,7 +5,7 @@ services:
     plan: free
     region: oregon
     branch: r7.1-issue-11
-    buildCommand: npm ci && npm run build
+    buildCommand: npm install && npm run build
     startCommand: npm run db:migrate && npm run db:seed && npm start
     healthCheckPath: /api/health
     autoDeployTrigger: checksPass
