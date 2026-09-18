@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "dev:api": "tsx server/index.ts",
+    "start": "tsx server/index.ts",
     "build": "tsc -b && vite build && tsc -p tsconfig.server.json --noEmit",
     "test": "vitest run",
     "test:r7": "vitest run src/r7 server --passWithNoTests",
