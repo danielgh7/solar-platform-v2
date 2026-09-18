@@ -228,25 +228,78 @@ jobs:
         with:
           path: collected
       - name: Require every technical platform artifact
+        shell: bash
         run: |
-          test -d collected/web-dist
-          test -d collected/android-builds
-          test -d collected/android-runtime-pixel_7
-          test -d collected/android-runtime-pixel_tablet
-          test -d collected/ios-simulator-evidence
-          test -d collected/desktop-windows-2025
-          test -d collected/desktop-macos-15
-          find collected/android-builds -type f -name '*.apk' | grep -q .
-          find collected/android-builds -type f -name '*.aab' | grep -q .
-          find collected/desktop-windows-2025 -type f -name '*.msi' | grep -q .
-          find collected/desktop-windows-2025 -type f -name '*setup.exe' | grep -q .
-          find collected/desktop-macos-15 -type f -name '*.dmg' | grep -q .
-          test -s collected/android-runtime-pixel_7/android-phone.png
-          test -s collected/android-runtime-pixel_tablet/android-tablet.png
-          test -s collected/ios-simulator-evidence/native-ios/ios-iphone.png
-          test -s collected/ios-simulator-evidence/native-ios/ios-ipad.png
-          test -s collected/desktop-windows-2025/native-windows/windows-app.png
-          test -s collected/desktop-macos-15/native-macos/macos-app.png
+          require_dir() {
+            local label="$1" path="$2"
+            if [[ ! -d "$path" ]]; then
+              echo "::error title=Missing platform artifact::$label: directory '$path' was not downloaded"
+              return 1
+            fi
+            echo "PASS: $label -> $path"
+          }
+          require_file() {
+            local label="$1" path="$2"
+            if [[ ! -s "$path" ]]; then
+              echo "::error title=Missing platform evidence::$label: non-empty file '$path' was not found"
+              return 1
+            fi
+            echo "PASS: $label -> $path"
+          }
+          require_match() {
+            local label="$1" root="$2" predicate="$3" pattern="$4"
+            local match
+            match="$(find "$root" -type f "$predicate" "$pattern" -size +0c -print -quit)"
+            if [[ -z "$match" ]]; then
+              echo "::error title=Missing platform artifact::$label: no non-empty '$pattern' file under '$root'"
+              echo "Files downloaded under $root:"
+              find "$root" -type f -print | sort
+              return 1
+            fi
+            echo "PASS: $label -> $match"
+          }
+          require_suffix() {
+            local label="$1" root="$2" suffix="$3"
+            local match
+            match="$(find "$root" -type f -path "*/$suffix" -size +0c -print -quit)"
+            if [[ -z "$match" ]]; then
+              echo "::error title=Missing platform evidence::$label: no non-empty file ending in '$suffix' under '$root'"
+              echo "Files downloaded under $root:"
+              find "$root" -type f -print | sort
+              return 1
+            fi
+            echo "PASS: $label -> $match"
+          }
+
+          failed=0
+          require_dir "Web/PWA distribution" collected/web-dist || failed=1
+          require_dir "Android APK/AAB artifact" collected/android-builds || failed=1
+          require_dir "Android phone runtime artifact" collected/android-runtime-pixel_7 || failed=1
+          require_dir "Android tablet runtime artifact" collected/android-runtime-pixel_tablet || failed=1
+          require_dir "iOS Simulator artifact" collected/ios-simulator-evidence || failed=1
+          require_dir "Windows desktop artifact" collected/desktop-windows-2025 || failed=1
+          require_dir "macOS desktop artifact" collected/desktop-macos-15 || failed=1
+
+          require_match "Android APK" collected/android-builds -name '*.apk' || failed=1
+          require_match "Android AAB" collected/android-builds -name '*.aab' || failed=1
+          require_match "Windows MSI installer" collected/desktop-windows-2025 -name '*.msi' || failed=1
+          require_match "Windows NSIS installer" collected/desktop-windows-2025 -name '*setup.exe' || failed=1
+          require_match "macOS DMG installer" collected/desktop-macos-15 -name '*.dmg' || failed=1
+          require_file "Android phone runtime screenshot" collected/android-runtime-pixel_7/android-phone.png || failed=1
+          require_file "Android tablet runtime screenshot" collected/android-runtime-pixel_tablet/android-tablet.png || failed=1
+          # The iOS artifact includes both ~/Library/Developer/Xcode/DerivedData and
+          # the repository evidence. upload-artifact therefore preserves the
+          # repository path below their common ancestor instead of flattening
+          # native-ios to the artifact root.
+          require_suffix "iPhone Simulator runtime screenshot" collected/ios-simulator-evidence 'artifacts/r7.1/native-ios/ios-iphone.png' || failed=1
+          require_suffix "iPad Simulator runtime screenshot" collected/ios-simulator-evidence 'artifacts/r7.1/native-ios/ios-ipad.png' || failed=1
+          require_file "Windows runtime screenshot" collected/desktop-windows-2025/artifacts/r7.1/native-windows/windows-app.png || failed=1
+          require_file "macOS runtime screenshot" collected/desktop-macos-15/artifacts/r7.1/native-macos/macos-app.png || failed=1
+
+          if (( failed )); then
+            echo "::error title=R7.1 artifact gate failed::One or more required platform artifacts are missing; see the individual errors above."
+            exit 1
+          fi
       - name: Build final same-SHA artifact manifest
         env:
           CANDIDATE_SHA: ${{ github.sha }}
