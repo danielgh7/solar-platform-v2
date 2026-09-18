@@ -61,6 +61,51 @@ jobs:
         with: {name: android-builds, path: |
             android/app/build/outputs/**
             android/SHA256SUMS.txt}
+  android-runtime:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        include:
+          - profile: pixel_7
+            evidence: android-phone.png
+          - profile: pixel_tablet
+            evidence: android-tablet.png
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - uses: actions/setup-java@v4
+        with: {distribution: temurin, java-version: '21'}
+      - run: npm install
+      - run: node scripts/generate-r7-1-icons.mjs
+      - run: cp src-tauri/icons/192x192.png public/pwa-192x192.png && cp src-tauri/icons/512x512.png public/pwa-512x512.png
+      - run: npm run build:web && npx cap add android && npx cap sync android
+      - run: cd android && ./gradlew assembleDebug
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Run app on Android emulator and capture evidence
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          profile: ${{ matrix.profile }}
+          disable-animations: true
+          script: |
+            mkdir -p artifacts/r7.1/native-android
+            adb install -r android/app/build/outputs/apk/debug/app-debug.apk
+            adb shell am start -W -n mx.enertika.buenosdiassol/.MainActivity
+            sleep 5
+            adb exec-out screencap -p > artifacts/r7.1/native-android/${{ matrix.evidence }}
+            test -s artifacts/r7.1/native-android/${{ matrix.evidence }}
+            sha256sum artifacts/r7.1/native-android/${{ matrix.evidence }} > artifacts/r7.1/native-android/SHA256SUMS-${{ matrix.profile }}.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-runtime-${{ matrix.profile }}
+          path: artifacts/r7.1/native-android/**
+
   ios:
     runs-on: macos-15
     steps:
