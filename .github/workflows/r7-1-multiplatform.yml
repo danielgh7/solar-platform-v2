@@ -58,9 +58,11 @@ jobs:
       - run: |
           sha256sum android/app/build/outputs/apk/debug/app-debug.apk android/app/build/outputs/bundle/release/app-release.aab > android/SHA256SUMS.txt
       - uses: actions/upload-artifact@v4
-        with: {name: android-builds, path: |
+        with:
+          name: android-builds
+          path: |
             android/app/build/outputs/**
-            android/SHA256SUMS.txt}
+            android/SHA256SUMS.txt
   android-runtime:
     runs-on: ubuntu-24.04
     strategy:
