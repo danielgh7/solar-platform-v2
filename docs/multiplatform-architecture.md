@@ -1,0 +1,2 @@
+# R7.1 multiplatform architecture
+One React application, the accepted R0.1–R7 domain engines, and one R7 API/PostgreSQL source of truth. Capacitor packages Android/iOS; Tauri packages Windows/macOS. Platform capabilities live behind `src/platform` adapters; domain modules contain no platform checks. Native clients never contain database credentials or server secrets. Small-phone R2 design is intentionally read/summary-first; full geometry editing is tablet/desktop optimized.

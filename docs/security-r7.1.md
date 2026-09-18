@@ -1,0 +1,11 @@
+# R7.1 platform security review
+- PostgreSQL and session secrets remain server-only; client variables are public configuration only.
+- HTTPS is mandatory outside local development.
+- Server tenancy/RBAC and R4 confidentiality remain authoritative; packaging never substitutes client authorization.
+- External navigation and deep links use explicit allowlists.
+- Tauri has no shell plugin/command exposure and uses CSP.
+- File/camera capability is adapter-mediated; production upload endpoints retain server MIME/size validation.
+- Offline state never fabricates successful writes; R7 optimistic concurrency remains authoritative after reconnect.
+- Native credential storage must use OS Keychain/Keystore through a reviewed Capacitor/Tauri secure-storage plugin before persistent bearer credentials are introduced. Current R7 cookie session is not copied to plaintext storage.
+- Production signing keys are CI/store secrets only.
+- Permissions are capability-driven and must remain minimal.

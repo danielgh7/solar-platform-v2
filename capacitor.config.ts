@@ -1,0 +1,1 @@
+import type{CapacitorConfig}from'@capacitor/cli';const config:CapacitorConfig={appId:'mx.enertika.buenosdiassol',appName:'Buenos días sol',webDir:'dist',server:{androidScheme:'https',iosScheme:'https'}};export default config;

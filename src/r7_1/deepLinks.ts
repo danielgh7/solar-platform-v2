@@ -1,0 +1,2 @@
+const ALLOWED_ROUTES=[/^\/projects(?:\/[^/]+(?:\/(?:consumption|design|equipment|economics|proposal))?)?$/, /^\/crm(?:\/opportunities\/[^/]+)?$/, /^\/settings\/company$/];
+export function validateDeepLink(input:string){const u=new URL(input,'https://app.invalid');if(u.origin!=='https://app.invalid'&&u.protocol!=='bds:')throw new Error('Deep link origin rejected');const path=u.pathname; if(!ALLOWED_ROUTES.some(r=>r.test(path)))throw new Error('Deep link route rejected');return path+u.search}

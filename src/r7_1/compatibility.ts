@@ -1,0 +1,1 @@
+export type Compatibility='compatible'|'upgrade-required';const parts=(v:string)=>v.split('.').map(Number);export function clientCompatibility(client:string,minimum:string):Compatibility{const a=parts(client),b=parts(minimum);for(let i=0;i<3;i++){if((a[i]||0)>(b[i]||0))return'compatible';if((a[i]||0)<(b[i]||0))return'upgrade-required'}return'compatible'}
