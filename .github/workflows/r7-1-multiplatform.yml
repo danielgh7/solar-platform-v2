@@ -55,8 +55,12 @@ jobs:
       - run: npx cap add android && npx cap sync android
       - run: cd android && ./gradlew assembleDebug bundleRelease
       - run: test -s android/app/build/outputs/apk/debug/app-debug.apk && test -s android/app/build/outputs/bundle/release/app-release.aab
+      - run: |
+          sha256sum android/app/build/outputs/apk/debug/app-debug.apk android/app/build/outputs/bundle/release/app-release.aab > android/SHA256SUMS.txt
       - uses: actions/upload-artifact@v4
-        with: {name: android-builds, path: android/app/build/outputs/**}
+        with: {name: android-builds, path: |
+            android/app/build/outputs/**
+            android/SHA256SUMS.txt}
   ios:
     runs-on: macos-15
     steps:
@@ -69,8 +73,40 @@ jobs:
       - run: npm run build:web
       - run: npx cap add ios && npx cap sync ios
       - run: xcodebuild -project ios/App/App.xcodeproj -scheme App -sdk iphonesimulator -configuration Debug CODE_SIGNING_ALLOWED=NO build
+      - name: Validate iPhone and iPad simulator runtime
+        shell: bash
+        run: |
+          APP_PATH="$(find ~/Library/Developer/Xcode/DerivedData -path '*/Build/Products/Debug-iphonesimulator/App.app' -print -quit)"
+          test -d "$APP_PATH"
+          mkdir -p artifacts/r7.1/native-ios
+          python3 - <<'PY' > /tmp/r71-simulators.txt
+          import json, subprocess
+          data=json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j']))
+          devices=[d for group in data['devices'].values() for d in group]
+          iphone=next(d for d in devices if 'iPhone' in d['name'])
+          ipad=next(d for d in devices if 'iPad' in d['name'])
+          print(iphone['udid']); print(ipad['udid'])
+          PY
+          IPHONE="$(sed -n '1p' /tmp/r71-simulators.txt)"
+          IPAD="$(sed -n '2p' /tmp/r71-simulators.txt)"
+          for SPEC in "iphone:$IPHONE" "ipad:$IPAD"; do
+            KIND="${SPEC%%:*}"; UDID="${SPEC#*:}"
+            xcrun simctl boot "$UDID" || true
+            open -a Simulator --args -CurrentDeviceUDID "$UDID"
+            xcrun simctl bootstatus "$UDID" -b
+            xcrun simctl install "$UDID" "$APP_PATH"
+            xcrun simctl launch "$UDID" mx.enertika.buenosdiassol
+            sleep 5
+            xcrun simctl io "$UDID" screenshot "artifacts/r7.1/native-ios/ios-${KIND}.png"
+            xcrun simctl shutdown "$UDID" || true
+          done
+          shasum -a 256 artifacts/r7.1/native-ios/*.png > artifacts/r7.1/native-ios/SHA256SUMS.txt
       - uses: actions/upload-artifact@v4
-        with: {name: ios-simulator-build, path: ~/Library/Developer/Xcode/DerivedData/**/Build/Products/Debug-iphonesimulator/*.app}
+        with:
+          name: ios-simulator-evidence
+          path: |
+            ~/Library/Developer/Xcode/DerivedData/**/Build/Products/Debug-iphonesimulator/*.app
+            artifacts/r7.1/native-ios/**
   desktop:
     strategy:
       matrix:
@@ -91,8 +127,46 @@ jobs:
       - name: Verify desktop distributables
         shell: bash
         run: |
-          if [[ "${{ matrix.os }}" == windows-* ]]; then find src-tauri/target/release/bundle -type f \( -name '*.msi' -o -name '*setup.exe' \) | grep -q .; else find src-tauri/target/release/bundle -type f -name '*.dmg' | grep -q . && find src-tauri/target/release/bundle -type d -name '*.app' | grep -q .; fi
+          if [[ "${{ matrix.os }}" == windows-* ]]; then
+            find src-tauri/target/release/bundle -type f -name '*.msi' | grep -q .
+            find src-tauri/target/release/bundle -type f -name '*setup.exe' | grep -q .
+          else
+            find src-tauri/target/release/bundle -type f -name '*.dmg' | grep -q .
+            find src-tauri/target/release/bundle -type d -name '*.app' | grep -q .
+          fi
+      - name: Capture Windows runtime evidence
+        if: startsWith(matrix.os, 'windows-')
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path artifacts/r7.1/native-windows | Out-Null
+          $exe = Resolve-Path "src-tauri/target/release/buenos-dias-sol.exe"
+          $p = Start-Process $exe -PassThru
+          Start-Sleep -Seconds 8
+          Add-Type -AssemblyName System.Windows.Forms
+          Add-Type -AssemblyName System.Drawing
+          $bounds = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
+          $bmp = New-Object System.Drawing.Bitmap $bounds.Width, $bounds.Height
+          $g = [System.Drawing.Graphics]::FromImage($bmp)
+          $g.CopyFromScreen($bounds.Location, [System.Drawing.Point]::Empty, $bounds.Size)
+          $bmp.Save((Join-Path $PWD "artifacts/r7.1/native-windows/windows-app.png"), [System.Drawing.Imaging.ImageFormat]::Png)
+          $g.Dispose(); $bmp.Dispose()
+          Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
+          Get-FileHash artifacts/r7.1/native-windows/windows-app.png -Algorithm SHA256 | Format-List | Out-File artifacts/r7.1/native-windows/SHA256SUMS.txt
+      - name: Capture macOS runtime evidence
+        if: startsWith(matrix.os, 'macos-')
+        shell: bash
+        run: |
+          mkdir -p artifacts/r7.1/native-macos
+          APP_PATH="$(find src-tauri/target/release/bundle -type d -name '*.app' -print -quit)"
+          test -d "$APP_PATH"
+          open "$APP_PATH"
+          sleep 8
+          screencapture -x artifacts/r7.1/native-macos/macos-app.png
+          test -s artifacts/r7.1/native-macos/macos-app.png
+          shasum -a 256 artifacts/r7.1/native-macos/macos-app.png > artifacts/r7.1/native-macos/SHA256SUMS.txt
       - uses: actions/upload-artifact@v4
         with:
           name: desktop-${{ matrix.os }}
-          path: src-tauri/target/release/bundle/**
+          path: |
+            src-tauri/target/release/bundle/**
+            artifacts/r7.1/native-*/**
