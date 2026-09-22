@@ -3,6 +3,8 @@ on:
   push:
     branches: [r7.1-issue-11]
   workflow_dispatch:
+env:
+  VITE_API_URL: https://solar-platform-v2.onrender.com
 jobs:
   regression:
     runs-on: ubuntu-24.04
@@ -39,6 +41,13 @@ jobs:
       - run: find artifacts/r7.1 -maxdepth 1 -type f ! -name SHA256SUMS.txt -print0 | sort -z | xargs -0 sha256sum > artifacts/r7.1/SHA256SUMS.txt
       - uses: actions/upload-artifact@v4
         with: {name: r7-1-responsive-evidence-checksums, path: artifacts/r7.1/SHA256SUMS.txt}
+      - name: Rebuild deployable same-origin Web/PWA artifact
+        run: |
+          VITE_API_URL= npm run build:web
+          if grep -R -E -q 'https?://(127\.0\.0\.1|localhost)|staging\.invalid\.example' dist/assets; then
+            echo "::error title=Invalid Web/PWA backend::Deployable web bundle contains a development or placeholder backend URL"
+            exit 1
+          fi
       - uses: actions/upload-artifact@v4
         with: {name: web-dist, path: dist}
   android:
@@ -53,6 +62,14 @@ jobs:
       - run: node scripts/generate-r7-1-icons.mjs
       - run: cp src-tauri/icons/192x192.png public/pwa-192x192.png && cp src-tauri/icons/512x512.png public/pwa-512x512.png
       - run: npm run build:web
+      - name: Verify production HTTPS backend in WebView bundle
+        shell: bash
+        run: |
+          grep -R -F -q "$VITE_API_URL" dist/assets || { echo "::error title=Missing production backend::Bundle does not contain $VITE_API_URL"; exit 1; }
+          if grep -R -E -q 'https?://(127\.0\.0\.1|localhost)|staging\.invalid\.example' dist/assets; then
+            echo "::error title=Invalid native backend::Bundle contains a development or placeholder backend URL"
+            exit 1
+          fi
       - run: npx cap add android && npx cap sync android
       - run: cd android && ./gradlew assembleDebug bundleRelease
       - run: test -s android/app/build/outputs/apk/debug/app-debug.apk && test -s android/app/build/outputs/bundle/release/app-release.aab
@@ -82,7 +99,16 @@ jobs:
       - run: npm install
       - run: node scripts/generate-r7-1-icons.mjs
       - run: cp src-tauri/icons/192x192.png public/pwa-192x192.png && cp src-tauri/icons/512x512.png public/pwa-512x512.png
-      - run: npm run build:web && npx cap add android && npx cap sync android
+      - run: npm run build:web
+      - name: Verify production HTTPS backend in Android runtime bundle
+        shell: bash
+        run: |
+          grep -R -F -q "$VITE_API_URL" dist/assets || { echo "::error title=Missing production backend::Bundle does not contain $VITE_API_URL"; exit 1; }
+          if grep -R -E -q 'https?://(127\.0\.0\.1|localhost)|staging\.invalid\.example' dist/assets; then
+            echo "::error title=Invalid Android backend::Bundle contains a development or placeholder backend URL"
+            exit 1
+          fi
+      - run: npx cap add android && npx cap sync android
       - run: cd android && ./gradlew assembleDebug
       - name: Enable KVM
         run: |
@@ -119,6 +145,14 @@ jobs:
       - run: node scripts/generate-r7-1-icons.mjs
       - run: cp src-tauri/icons/192x192.png public/pwa-192x192.png && cp src-tauri/icons/512x512.png public/pwa-512x512.png
       - run: npm run build:web
+      - name: Verify production HTTPS backend in WebView bundle
+        shell: bash
+        run: |
+          grep -R -F -q "$VITE_API_URL" dist/assets || { echo "::error title=Missing production backend::Bundle does not contain $VITE_API_URL"; exit 1; }
+          if grep -R -E -q 'https?://(127\.0\.0\.1|localhost)|staging\.invalid\.example' dist/assets; then
+            echo "::error title=Invalid native backend::Bundle contains a development or placeholder backend URL"
+            exit 1
+          fi
       - run: npx cap add ios && npx cap sync ios
       - run: xcodebuild -project ios/App/App.xcodeproj -scheme App -sdk iphonesimulator -configuration Debug CODE_SIGNING_ALLOWED=NO build
       - name: Validate iPhone and iPad simulator runtime
@@ -168,10 +202,17 @@ jobs:
       - run: npm install
       - run: node scripts/generate-r7-1-icons.mjs
       - run: cp src-tauri/icons/192x192.png public/pwa-192x192.png && cp src-tauri/icons/512x512.png public/pwa-512x512.png
+      - run: npm run build:web
+      - name: Verify production HTTPS backend in desktop bundle
+        shell: bash
+        run: |
+          grep -R -F -q "$VITE_API_URL" dist/assets || { echo "::error title=Missing production backend::Bundle does not contain $VITE_API_URL"; exit 1; }
+          if grep -R -E -q 'https?://(127\.0\.0\.1|localhost)|staging\.invalid\.example' dist/assets; then
+            echo "::error title=Invalid desktop backend::Bundle contains a development or placeholder backend URL"
+            exit 1
+          fi
       - run: npm run tauri icon src-tauri/icons/512x512.png
       - uses: tauri-apps/tauri-action@v0
-        env:
-          VITE_API_URL: https://staging.invalid.example
       - name: Verify desktop distributables
         shell: bash
         run: |
