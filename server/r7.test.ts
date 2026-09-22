@@ -1,4 +1,4 @@
-import {describe,it,expect} from 'vitest';import {parseEnv} from './env';import {hasPermission,ROLE_PERMISSIONS} from './rbac';import {brandUpdateSchema,localeSchema,migrationPreviewSchema,projectStateSchema,proposalVersionSchema,signInSchema} from './schemas';
+import {describe,it,expect} from 'vitest';import {parseEnv} from './env';import {hasPermission,redactEconomicsForRole,ROLE_PERMISSIONS} from './rbac';import {brandUpdateSchema,localeSchema,migrationPreviewSchema,projectStateSchema,proposalVersionSchema,signInSchema} from './schemas';
 const env={NODE_ENV:'test',DATABASE_URL:'postgres://x:x@127.0.0.1:5432/x',SESSION_SECRET:'12345678901234567890123456789012',APP_ORIGIN:'http://127.0.0.1:4173'} as any;
 describe('R7 production foundation',()=>{
  it('validates environment',()=>expect(parseEnv(env).PORT).toBe(8787));
@@ -8,6 +8,8 @@ describe('R7 production foundation',()=>{
  it('Admin owns all declared permissions',()=>expect(ROLE_PERMISSIONS.Admin.size).toBeGreaterThan(10));
  it('Commercial cannot see internal margin',()=>expect(hasPermission('Commercial','economics.internal.read')).toBe(false));
  it('Viewer cannot see internal margin',()=>expect(hasPermission('Viewer','economics.internal.read')).toBe(false));
+ it('redacts every internal economics input for Viewer',()=>expect(redactEconomicsForRole('Viewer',{projectId:'SOL-1',costBasis:{secret:1},pricingRule:{secret:2},commercialCosts:{secret:3}})).toEqual({projectId:'SOL-1',selectedScenarioId:undefined,updatedAt:undefined,internalFieldsRedacted:true}));
+ it('preserves internal economics for Admin',()=>expect(redactEconomicsForRole('Admin',{costBasis:{total:1}})).toEqual({costBasis:{total:1}}));
  it('Engineering can edit engineering',()=>expect(hasPermission('Engineering','engineering.edit')).toBe(true));
  it('Operations can write handoff',()=>expect(hasPermission('Operations','handoff.write')).toBe(true));
  it('Viewer cannot mutate CRM',()=>expect(hasPermission('Viewer','crm.write')).toBe(false));
