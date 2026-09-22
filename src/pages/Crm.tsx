@@ -1,5 +1,5 @@
-import {useMemo,useState} from 'react';
-import {Link,useNavigate} from 'react-router-dom';
+import {useEffect,useMemo,useState} from 'react';
+import {Link,useNavigate,useSearchParams} from 'react-router-dom';
 import {BarChart3,ChevronDown,ChevronUp,Columns3,Filter,ListTodo,Plus,Search,Settings2,Table2,TriangleAlert} from 'lucide-react';
 import {project} from '../data';
 import {deriveAcceptedProjectOutputs} from '../domain/acceptedProjectOutputs';
@@ -24,7 +24,7 @@ type SortKey='updated'|'value-desc'|'close'|'stale-desc';
 type TaskBucket='all'|'overdue'|'today'|'upcoming'|'completed';
 
 export function Crm(){
- const {state,setState}=useCrmState(),nav=useNavigate();
+ const {state,setState}=useCrmState(),nav=useNavigate(),[searchParams]=useSearchParams();
  const [message,setMessage]=useState(''),[sortKey,setSortKey]=useState<SortKey>('updated'),[taskBucket,setTaskBucket]=useState<TaskBucket>('all'),[taskOwner,setTaskOwner]=useState('');
  const {profile}=useEnergyProfile(),{design}=useSiteDesign(createDefaultSiteDesign()),{electrical}=useElectricalDesign(),{state:r4}=useR4State(),{proposal}=useProposalState(project.id);
  const truth=useMemo(()=>projectSummary(deriveAcceptedProjectOutputs(profile,design,electrical,r4),proposal),[profile,design,electrical,r4,proposal]);
@@ -35,6 +35,7 @@ export function Crm(){
  const funnel=useMemo(()=>funnelMetrics(state,NOW()),[state]);
  const mode=state.viewPrefs.mode;
  const setPrefs=(p:Partial<typeof state.viewPrefs>)=>setState(s=>({...s,viewPrefs:{...s.viewPrefs,...p}}));
+ useEffect(()=>{if(searchParams.get('view')==='tasks'&&mode!=='tasks')setPrefs({mode:'tasks'})},[searchParams,mode]);
  const move=(o:Opportunity,to:OpportunityStageId)=>{const result=moveOpportunity(state,o.id,to,NOW(),'u-dg',o.projectId?summaries.get(o.projectId):undefined);if(!result.ok){setMessage(result.issues.map(i=>i.message).join(' '));return}setState(result.state);setMessage(`Stage moved to ${stageById(state.pipeline,to).label}.`)};
  const createLead=()=>{const n=state.opportunities.length+1,id=`opp-${n}`,aid=`acct-${n}`,cid=`contact-${n}`,at=NOW();setState(s=>({...s,accounts:[...s.accounts,{id:aid,displayName:`New solar lead ${n}`,type:'residential',notes:'',tags:[],projectIds:[]}],contacts:[...s.contacts,{id:cid,accountId:aid,name:`New contact ${n}`,role:'',phone:'',email:'',preferredChannel:'Phone',notes:'',primary:true}],opportunities:[...s.opportunities,{id,accountId:aid,primaryContactId:cid,name:`Solar opportunity ${n}`,stageId:'new',status:'open',ownerId:'u-dg',sourceId:'other',nextAction:'Qualify solar opportunity',nextActionDate:at.slice(0,10),notes:'',createdAt:at,updatedAt:at}],stageHistory:[...s.stageHistory,{id:`stage-${id}-new`,opportunityId:id,stageId:'new',enteredAt:at}],audit:[...s.audit,{id:`audit-${id}`,eventType:'opportunity-created',entityId:id,occurredAt:at,actorId:'u-dg',after:{stageId:'new'}}],updatedAt:at}));nav(`/crm/opportunities/${id}`)};
  const updateStageConfig=(id:OpportunityStageId,patch:{label?:string;probabilityPct?:number;staleAfterDays?:number})=>{const at=NOW();setState(s=>{const before=s.pipeline.stages.find(x=>x.id===id);return{...s,pipeline:{...s.pipeline,stages:s.pipeline.stages.map(x=>x.id===id?{...x,...patch}:x)},audit:[...s.audit,auditEntry('pipeline-config-changed',id,at,'u-dg',before,{...before,...patch})],updatedAt:at}})};
