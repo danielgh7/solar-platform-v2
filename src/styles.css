@@ -20,3 +20,7 @@
 /* R7.1 adaptive hardening */
 @media(max-width:900px){.proposal-workspace{grid-template-columns:1fr}.proposal-outline{position:static;display:flex;overflow-x:auto}.proposal-outline button{min-width:130px}.proposal-cover{height:auto;min-height:420px;padding:28px}.proposal-section{padding:22px}.proposal-section.split{grid-template-columns:1fr}.proposal-section.split>div+div{border-left:0;padding-left:0}.proposal-kpis,.proposal-equipment{grid-template-columns:repeat(2,minmax(0,1fr))}.selected-equipment{grid-template-columns:1fr}.selected-equipment>div{border-right:0;border-bottom:1px solid var(--line)}.equipment-row{grid-template-columns:28px 1.5fr .7fr}.equipment-row>*:nth-child(n+4){display:none}}
 @media(max-width:600px){.top-actions{margin-left:0}.topnav nav{scrollbar-width:none}.project-context{scrollbar-width:none}.proposal-actions{flex-wrap:wrap;margin-top:10px}.proposal-cover h1{font-size:28px}.proposal-kpis,.proposal-equipment{grid-template-columns:1fr}.proposal-kpis span,.proposal-equipment span{border-right:0;border-bottom:1px solid #dfe5e3}.chart-wrap{height:240px}.crm-board,.crm-grid{overflow-x:auto}.primary,.secondary,.icon,.topnav nav a,.project-tabs a{min-height:44px}}
+
+/* The official dark wordmark needs a high-contrast treatment on the dark product shell. */
+.topnav .shell-brand-link{display:flex;align-items:center;min-height:36px}
+.topnav .shell-brand{filter:grayscale(1) brightness(0) invert(1);opacity:.96}
