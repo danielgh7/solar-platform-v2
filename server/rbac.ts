@@ -16,3 +16,7 @@ export const ROLE_PERMISSIONS:Record<Role,ReadonlySet<Permission>>={
  Viewer:new Set(['org.settings.read','projects.read','economics.read','proposal.read','crm.read','handoff.read'])
 };
 export function hasPermission(role:Role,permission:Permission){return ROLE_PERMISSIONS[role].has(permission)}
+export function redactEconomicsForRole(role:Role,r4:any){
+ if(hasPermission(role,'economics.internal.read'))return r4;
+ return{projectId:r4?.projectId,selectedScenarioId:r4?.selectedScenarioId,updatedAt:r4?.updatedAt,internalFieldsRedacted:true};
+}
