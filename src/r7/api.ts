@@ -1,7 +1,7 @@
 export type ApiErrorCode='UNAUTHENTICATED'|'SESSION_EXPIRED_OR_FORBIDDEN'|'FORBIDDEN'|'VALIDATION_ERROR'|'CONFLICT'|'IMMUTABLE'|'NOT_FOUND'|'INTERNAL_ERROR'|'NETWORK_ERROR'|'ORIGIN_REJECTED'|'INVALID_CREDENTIALS';
 export class ApiError extends Error{constructor(public code:ApiErrorCode,public status:number,public detail?:unknown){super(code)}}
-const configured=(import.meta as any).env?.VITE_API_URL;
-const base=configured||((import.meta as any).env?.PROD&&typeof window!=='undefined'?window.location.origin:'http://127.0.0.1:8787');
+const configured=import.meta.env.VITE_API_URL;
+const base=configured||(import.meta.env.PROD&&typeof window!=='undefined'?window.location.origin:'http://127.0.0.1:8787');
 async function request<T>(path:string,init:RequestInit={}):Promise<T>{let r:Response;try{r=await fetch(`${base}${path}`,{...init,credentials:'include',headers:{'Content-Type':'application/json',...(init.headers||{})}})}catch(e){throw new ApiError('NETWORK_ERROR',0,e)}const body=r.status===204?null:await r.json().catch(()=>null);if(!r.ok)throw new ApiError(body?.error?.code||'INTERNAL_ERROR',r.status,body?.error);return body as T}
 export const api={
  signIn:(email:string,password:string)=>request<any>('/api/auth/sign-in',{method:'POST',body:JSON.stringify({email,password})}),signOut:()=>request<void>('/api/auth/sign-out',{method:'POST'}),me:()=>request<any>('/api/auth/me'),
