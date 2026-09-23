@@ -43,7 +43,7 @@ jobs:
         with: {name: r7-1-responsive-evidence-checksums, path: artifacts/r7.1/SHA256SUMS.txt}
       - name: Rebuild deployable same-origin Web/PWA artifact
         run: |
-          VITE_API_URL= npm run build:web
+          env -u VITE_API_URL NODE_ENV=production npm run build:web
           if grep -R -E -q 'https?://(127\.0\.0\.1|localhost):8787|staging\.invalid\.example' dist/assets; then
             echo "::error title=Invalid Web/PWA backend::Deployable web bundle contains a development or placeholder backend URL"
             exit 1
