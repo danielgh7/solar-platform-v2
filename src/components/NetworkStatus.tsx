@@ -1,0 +1,1 @@
+import{useNetworkState}from'../r7_1/network';export function NetworkStatus(){const online=useNetworkState();return online?null:<div className="offline-banner" role="status">Sin conexión · Los cambios no se marcarán como guardados hasta reconectar.</div>}

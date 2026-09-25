@@ -1,0 +1,367 @@
+name: R7.1 multiplatform
+on:
+  push:
+    branches: [r7.1-issue-11]
+  workflow_dispatch:
+env:
+  VITE_API_URL: https://solar-platform-v2.onrender.com
+jobs:
+  regression:
+    runs-on: ubuntu-24.04
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env: {POSTGRES_USER: solar, POSTGRES_PASSWORD: solar_ci, POSTGRES_DB: solar_platform_v2}
+        ports: ['5432:5432']
+        options: --health-cmd "pg_isready -U solar -d solar_platform_v2" --health-interval 2s --health-timeout 3s --health-retries 20
+    env:
+      NODE_ENV: test
+      DATABASE_URL: postgres://solar:solar_ci@127.0.0.1:5432/solar_platform_v2
+      DATABASE_SSL: disable
+      SESSION_SECRET: r71-ci-session-secret-${{ github.run_id }}-solar-platform
+      APP_ORIGIN: http://127.0.0.1:4173
+      PORT: 8787
+      VITE_API_URL: http://127.0.0.1:8787
+      R7_SEED_PASSWORD: r71-ci-${{ github.run_id }}-validation-password
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - run: npm install
+      - run: npm audit --omit=dev --audit-level=high
+      - run: node scripts/generate-r7-1-icons.mjs
+      - run: cp src-tauri/icons/192x192.png public/pwa-192x192.png && cp src-tauri/icons/512x512.png public/pwa-512x512.png
+      - run: npm run db:migrate && npm run db:seed && npm test && npm run db:validate && npm run build
+      - run: test -z "$(grep -R -E 'DATABASE_URL|SESSION_SECRET|R7_SEED_PASSWORD' dist 2>/dev/null || true)"
+      - run: npm run validate:r7-1
+      - run: npx playwright install --with-deps chromium
+      - run: npm run preview -- --host 127.0.0.1 > /tmp/r71-vite.log 2>&1 & npx wait-on http://127.0.0.1:4173 && node scripts/capture-r7-1.mjs
+      - uses: actions/upload-artifact@v4
+        with: {name: r7-1-responsive-evidence, path: artifacts/r7.1}
+      - run: find artifacts/r7.1 -maxdepth 1 -type f ! -name SHA256SUMS.txt -print0 | sort -z | xargs -0 sha256sum > artifacts/r7.1/SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with: {name: r7-1-responsive-evidence-checksums, path: artifacts/r7.1/SHA256SUMS.txt}
+      - name: Rebuild deployable same-origin Web/PWA artifact
+        run: |
+          env -u VITE_API_URL NODE_ENV=production npm run build:web
+          if grep -R -E -q 'https?://(127\.0\.0\.1|localhost):8787|staging\.invalid\.example' dist/assets; then
+            echo "::error title=Invalid Web/PWA backend::Deployable web bundle contains a development or placeholder backend URL"
+            exit 1
+          fi
+      - uses: actions/upload-artifact@v4
+        with: {name: web-dist, path: dist}
+  android:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - uses: actions/setup-java@v4
+        with: {distribution: temurin, java-version: '21'}
+      - run: npm install
+      - run: node scripts/generate-r7-1-icons.mjs
+      - run: cp src-tauri/icons/192x192.png public/pwa-192x192.png && cp src-tauri/icons/512x512.png public/pwa-512x512.png
+      - run: npm run build:web
+      - name: Verify production HTTPS backend in WebView bundle
+        shell: bash
+        run: |
+          grep -R -F -q "$VITE_API_URL" dist/assets || { echo "::error title=Missing production backend::Bundle does not contain $VITE_API_URL"; exit 1; }
+          if grep -R -E -q 'https?://(127\.0\.0\.1|localhost):8787|staging\.invalid\.example' dist/assets; then
+            echo "::error title=Invalid native backend::Bundle contains a development or placeholder backend URL"
+            exit 1
+          fi
+      - run: npx cap add android && npx cap sync android
+      - run: cd android && ./gradlew assembleDebug bundleRelease
+      - run: test -s android/app/build/outputs/apk/debug/app-debug.apk && test -s android/app/build/outputs/bundle/release/app-release.aab
+      - run: |
+          sha256sum android/app/build/outputs/apk/debug/app-debug.apk android/app/build/outputs/bundle/release/app-release.aab > android/SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-builds
+          path: |
+            android/app/build/outputs/**
+            android/SHA256SUMS.txt
+  android-runtime:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        include:
+          - profile: pixel_7
+            evidence: android-phone.png
+          - profile: pixel_tablet
+            evidence: android-tablet.png
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - uses: actions/setup-java@v4
+        with: {distribution: temurin, java-version: '21'}
+      - run: npm install
+      - run: node scripts/generate-r7-1-icons.mjs
+      - run: cp src-tauri/icons/192x192.png public/pwa-192x192.png && cp src-tauri/icons/512x512.png public/pwa-512x512.png
+      - run: npm run build:web
+      - name: Verify production HTTPS backend in Android runtime bundle
+        shell: bash
+        run: |
+          grep -R -F -q "$VITE_API_URL" dist/assets || { echo "::error title=Missing production backend::Bundle does not contain $VITE_API_URL"; exit 1; }
+          if grep -R -E -q 'https?://(127\.0\.0\.1|localhost):8787|staging\.invalid\.example' dist/assets; then
+            echo "::error title=Invalid Android backend::Bundle contains a development or placeholder backend URL"
+            exit 1
+          fi
+      - run: npx cap add android && npx cap sync android
+      - run: cd android && ./gradlew assembleDebug
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Run app on Android emulator and capture evidence
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          profile: ${{ matrix.profile }}
+          disable-animations: true
+          script: |
+            mkdir -p artifacts/r7.1/native-android
+            adb install -r android/app/build/outputs/apk/debug/app-debug.apk
+            adb shell am start -W -n mx.enertika.buenosdiassol/.MainActivity
+            sleep 5
+            adb exec-out screencap -p > artifacts/r7.1/native-android/${{ matrix.evidence }}
+            test -s artifacts/r7.1/native-android/${{ matrix.evidence }}
+            sha256sum artifacts/r7.1/native-android/${{ matrix.evidence }} > artifacts/r7.1/native-android/SHA256SUMS-${{ matrix.profile }}.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-runtime-${{ matrix.profile }}
+          path: artifacts/r7.1/native-android/**
+
+  ios:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - run: npm install
+      - run: node scripts/generate-r7-1-icons.mjs
+      - run: cp src-tauri/icons/192x192.png public/pwa-192x192.png && cp src-tauri/icons/512x512.png public/pwa-512x512.png
+      - run: npm run build:web
+      - name: Verify production HTTPS backend in WebView bundle
+        shell: bash
+        run: |
+          grep -R -F -q "$VITE_API_URL" dist/assets || { echo "::error title=Missing production backend::Bundle does not contain $VITE_API_URL"; exit 1; }
+          if grep -R -E -q 'https?://(127\.0\.0\.1|localhost):8787|staging\.invalid\.example' dist/assets; then
+            echo "::error title=Invalid native backend::Bundle contains a development or placeholder backend URL"
+            exit 1
+          fi
+      - run: npx cap add ios && npx cap sync ios
+      - run: xcodebuild -project ios/App/App.xcodeproj -scheme App -sdk iphonesimulator -configuration Debug CODE_SIGNING_ALLOWED=NO build
+      - name: Validate iPhone and iPad simulator runtime
+        shell: bash
+        run: |
+          APP_PATH="$(find ~/Library/Developer/Xcode/DerivedData -path '*/Build/Products/Debug-iphonesimulator/App.app' -print -quit)"
+          test -d "$APP_PATH"
+          mkdir -p artifacts/r7.1/native-ios
+          python3 - <<'PY' > /tmp/r71-simulators.txt
+          import json, subprocess
+          data=json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j']))
+          devices=[d for group in data['devices'].values() for d in group]
+          iphone=next(d for d in devices if 'iPhone' in d['name'])
+          ipad=next(d for d in devices if 'iPad' in d['name'])
+          print(iphone['udid']); print(ipad['udid'])
+          PY
+          IPHONE="$(sed -n '1p' /tmp/r71-simulators.txt)"
+          IPAD="$(sed -n '2p' /tmp/r71-simulators.txt)"
+          for SPEC in "iphone:$IPHONE" "ipad:$IPAD"; do
+            KIND="${SPEC%%:*}"; UDID="${SPEC#*:}"
+            xcrun simctl boot "$UDID" || true
+            open -a Simulator --args -CurrentDeviceUDID "$UDID"
+            xcrun simctl bootstatus "$UDID" -b
+            xcrun simctl install "$UDID" "$APP_PATH"
+            xcrun simctl launch "$UDID" mx.enertika.buenosdiassol
+            sleep 5
+            xcrun simctl io "$UDID" screenshot "artifacts/r7.1/native-ios/ios-${KIND}.png"
+            xcrun simctl shutdown "$UDID" || true
+          done
+          shasum -a 256 artifacts/r7.1/native-ios/*.png > artifacts/r7.1/native-ios/SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ios-simulator-evidence
+          path: |
+            ~/Library/Developer/Xcode/DerivedData/**/Build/Products/Debug-iphonesimulator/*.app
+            artifacts/r7.1/native-ios/**
+  desktop:
+    strategy:
+      matrix:
+        os: [windows-2025, macos-15]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - uses: dtolnay/rust-toolchain@stable
+      - run: npm install
+      - run: node scripts/generate-r7-1-icons.mjs
+      - run: cp src-tauri/icons/192x192.png public/pwa-192x192.png && cp src-tauri/icons/512x512.png public/pwa-512x512.png
+      - run: npm run build:web
+      - name: Verify production HTTPS backend in desktop bundle
+        shell: bash
+        run: |
+          grep -R -F -q "$VITE_API_URL" dist/assets || { echo "::error title=Missing production backend::Bundle does not contain $VITE_API_URL"; exit 1; }
+          if grep -R -E -q 'https?://(127\.0\.0\.1|localhost):8787|staging\.invalid\.example' dist/assets; then
+            echo "::error title=Invalid desktop backend::Bundle contains a development or placeholder backend URL"
+            exit 1
+          fi
+      - run: npm run tauri icon src-tauri/icons/512x512.png
+      - uses: tauri-apps/tauri-action@v0
+      - name: Verify desktop distributables
+        shell: bash
+        run: |
+          if [[ "${{ matrix.os }}" == windows-* ]]; then
+            find src-tauri/target/release/bundle -type f -name '*.msi' | grep -q .
+            find src-tauri/target/release/bundle -type f -name '*setup.exe' | grep -q .
+          else
+            find src-tauri/target/release/bundle -type f -name '*.dmg' | grep -q .
+            find src-tauri/target/release/bundle -type d -name '*.app' | grep -q .
+          fi
+      - name: Capture Windows runtime evidence
+        if: startsWith(matrix.os, 'windows-')
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path artifacts/r7.1/native-windows | Out-Null
+          $exe = Resolve-Path "src-tauri/target/release/buenos-dias-sol.exe"
+          $p = Start-Process $exe -PassThru
+          Start-Sleep -Seconds 8
+          Add-Type -AssemblyName System.Windows.Forms
+          Add-Type -AssemblyName System.Drawing
+          $bounds = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
+          $bmp = New-Object System.Drawing.Bitmap $bounds.Width, $bounds.Height
+          $g = [System.Drawing.Graphics]::FromImage($bmp)
+          $g.CopyFromScreen($bounds.Location, [System.Drawing.Point]::Empty, $bounds.Size)
+          $bmp.Save((Join-Path $PWD "artifacts/r7.1/native-windows/windows-app.png"), [System.Drawing.Imaging.ImageFormat]::Png)
+          $g.Dispose(); $bmp.Dispose()
+          Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
+          Get-FileHash artifacts/r7.1/native-windows/windows-app.png -Algorithm SHA256 | Format-List | Out-File artifacts/r7.1/native-windows/SHA256SUMS.txt
+      - name: Capture macOS runtime evidence
+        if: startsWith(matrix.os, 'macos-')
+        shell: bash
+        run: |
+          mkdir -p artifacts/r7.1/native-macos
+          APP_PATH="$(find src-tauri/target/release/bundle -type d -name '*.app' -print -quit)"
+          test -d "$APP_PATH"
+          open "$APP_PATH"
+          sleep 8
+          screencapture -x artifacts/r7.1/native-macos/macos-app.png
+          test -s artifacts/r7.1/native-macos/macos-app.png
+          shasum -a 256 artifacts/r7.1/native-macos/macos-app.png > artifacts/r7.1/native-macos/SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: desktop-${{ matrix.os }}
+          path: |
+            src-tauri/target/release/bundle/**
+            artifacts/r7.1/native-*/**
+
+  manifest:
+    needs: [regression, android, android-runtime, ios, desktop]
+    runs-on: ubuntu-24.04
+    if: always() && !cancelled()
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: collected
+      - name: Require every technical platform artifact
+        shell: bash
+        run: |
+          require_dir() {
+            local label="$1" path="$2"
+            if [[ ! -d "$path" ]]; then
+              echo "::error title=Missing platform artifact::$label: directory '$path' was not downloaded"
+              return 1
+            fi
+            echo "PASS: $label -> $path"
+          }
+          require_file() {
+            local label="$1" path="$2"
+            if [[ ! -s "$path" ]]; then
+              echo "::error title=Missing platform evidence::$label: non-empty file '$path' was not found"
+              return 1
+            fi
+            echo "PASS: $label -> $path"
+          }
+          require_match() {
+            local label="$1" root="$2" predicate="$3" pattern="$4"
+            local match
+            match="$(find "$root" -type f "$predicate" "$pattern" -size +0c -print -quit)"
+            if [[ -z "$match" ]]; then
+              echo "::error title=Missing platform artifact::$label: no non-empty '$pattern' file under '$root'"
+              echo "Files downloaded under $root:"
+              find "$root" -type f -print | sort
+              return 1
+            fi
+            echo "PASS: $label -> $match"
+          }
+          require_suffix() {
+            local label="$1" root="$2" suffix="$3"
+            local match
+            match="$(find "$root" -type f -path "*/$suffix" -size +0c -print -quit)"
+            if [[ -z "$match" ]]; then
+              echo "::error title=Missing platform evidence::$label: no non-empty file ending in '$suffix' under '$root'"
+              echo "Files downloaded under $root:"
+              find "$root" -type f -print | sort
+              return 1
+            fi
+            echo "PASS: $label -> $match"
+          }
+
+          failed=0
+          require_dir "Web/PWA distribution" collected/web-dist || failed=1
+          require_dir "Android APK/AAB artifact" collected/android-builds || failed=1
+          require_dir "Android phone runtime artifact" collected/android-runtime-pixel_7 || failed=1
+          require_dir "Android tablet runtime artifact" collected/android-runtime-pixel_tablet || failed=1
+          require_dir "iOS Simulator artifact" collected/ios-simulator-evidence || failed=1
+          require_dir "Windows desktop artifact" collected/desktop-windows-2025 || failed=1
+          require_dir "macOS desktop artifact" collected/desktop-macos-15 || failed=1
+
+          require_match "Android APK" collected/android-builds -name '*.apk' || failed=1
+          require_match "Android AAB" collected/android-builds -name '*.aab' || failed=1
+          require_match "Windows MSI installer" collected/desktop-windows-2025 -name '*.msi' || failed=1
+          require_match "Windows NSIS installer" collected/desktop-windows-2025 -name '*setup.exe' || failed=1
+          require_match "macOS DMG installer" collected/desktop-macos-15 -name '*.dmg' || failed=1
+          require_file "Android phone runtime screenshot" collected/android-runtime-pixel_7/android-phone.png || failed=1
+          require_file "Android tablet runtime screenshot" collected/android-runtime-pixel_tablet/android-tablet.png || failed=1
+          # The iOS artifact includes both ~/Library/Developer/Xcode/DerivedData and
+          # the repository evidence. upload-artifact therefore preserves the
+          # repository path below their common ancestor instead of flattening
+          # native-ios to the artifact root.
+          require_suffix "iPhone Simulator runtime screenshot" collected/ios-simulator-evidence 'artifacts/r7.1/native-ios/ios-iphone.png' || failed=1
+          require_suffix "iPad Simulator runtime screenshot" collected/ios-simulator-evidence 'artifacts/r7.1/native-ios/ios-ipad.png' || failed=1
+          require_file "Windows runtime screenshot" collected/desktop-windows-2025/artifacts/r7.1/native-windows/windows-app.png || failed=1
+          require_file "macOS runtime screenshot" collected/desktop-macos-15/artifacts/r7.1/native-macos/macos-app.png || failed=1
+
+          if (( failed )); then
+            echo "::error title=R7.1 artifact gate failed::One or more required platform artifacts are missing; see the individual errors above."
+            exit 1
+          fi
+      - name: Build final same-SHA artifact manifest
+        env:
+          CANDIDATE_SHA: ${{ github.sha }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          mkdir -p artifacts/r7.1/final
+          python3 - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          root=Path('collected')
+          files=[]
+          for p in sorted(x for x in root.rglob('*') if x.is_file()):
+              h=hashlib.sha256(p.read_bytes()).hexdigest()
+              files.append({'path':str(p.relative_to(root)),'bytes':p.stat().st_size,'sha256':h})
+          out={'schema':1,'candidateSha':os.environ['CANDIDATE_SHA'],'workflowRunId':os.environ['RUN_ID'],'files':files}
+          Path('artifacts/r7.1/final/artifact-manifest.json').write_text(json.dumps(out,indent=2),encoding='utf-8')
+          with Path('artifacts/r7.1/final/SHA256SUMS.txt').open('w') as f:
+              for x in files: f.write(f"{x['sha256']}  {x['path']}\n")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: r7-1-final-manifest
+          path: artifacts/r7.1/final/**

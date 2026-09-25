@@ -1,4 +1,4 @@
-import {describe,it,expect} from 'vitest';import {parseEnv} from './env';import {hasPermission,ROLE_PERMISSIONS} from './rbac';import {brandUpdateSchema,localeSchema,migrationPreviewSchema,projectStateSchema,proposalVersionSchema,signInSchema} from './schemas';
+import {describe,it,expect} from 'vitest';import {parseEnv} from './env';import {hasPermission,redactEconomicsForRole,ROLE_PERMISSIONS} from './rbac';import {brandUpdateSchema,localeSchema,migrationPreviewSchema,projectCreateSchema,projectStateSchema,proposalVersionSchema,signInSchema} from './schemas';
 const env={NODE_ENV:'test',DATABASE_URL:'postgres://x:x@127.0.0.1:5432/x',SESSION_SECRET:'12345678901234567890123456789012',APP_ORIGIN:'http://127.0.0.1:4173'} as any;
 describe('R7 production foundation',()=>{
  it('validates environment',()=>expect(parseEnv(env).PORT).toBe(8787));
@@ -8,12 +8,15 @@ describe('R7 production foundation',()=>{
  it('Admin owns all declared permissions',()=>expect(ROLE_PERMISSIONS.Admin.size).toBeGreaterThan(10));
  it('Commercial cannot see internal margin',()=>expect(hasPermission('Commercial','economics.internal.read')).toBe(false));
  it('Viewer cannot see internal margin',()=>expect(hasPermission('Viewer','economics.internal.read')).toBe(false));
+ it('redacts every internal economics input for Viewer',()=>expect(redactEconomicsForRole('Viewer',{projectId:'SOL-1',costBasis:{secret:1},pricingRule:{secret:2},commercialCosts:{secret:3}})).toEqual({projectId:'SOL-1',selectedScenarioId:undefined,updatedAt:undefined,internalFieldsRedacted:true}));
+ it('preserves internal economics for Admin',()=>expect(redactEconomicsForRole('Admin',{costBasis:{total:1}})).toEqual({costBasis:{total:1}}));
  it('Engineering can edit engineering',()=>expect(hasPermission('Engineering','engineering.edit')).toBe(true));
  it('Operations can write handoff',()=>expect(hasPermission('Operations','handoff.write')).toBe(true));
  it('Viewer cannot mutate CRM',()=>expect(hasPermission('Viewer','crm.write')).toBe(false));
  it('brand update requires expected version',()=>expect(()=>brandUpdateSchema.parse({})).toThrow());
  it('brand colors require canonical hex',()=>expect(()=>brandUpdateSchema.partial().parse({primaryColor:'red'})).toThrow());
  it('project state uses optimistic version',()=>expect(projectStateSchema.parse({schemaVersion:1,r1:{},r2:{},r3:{},r4:{},r5:{},r6:{},expectedVersion:0}).expectedVersion).toBe(0));
+ it('validates a persisted project creation payload',()=>expect(projectCreateSchema.parse({id:'SOL-2026-0999',name:'Sitio Norte',customerName:'Cliente Solar',location:'Merida, Yucatan',serviceAddress:'Calle 1 #2',utility:'CFE',serviceType:'Commercial',phase:'Three-phase',voltage:'220 V',tariff:'GDMTO',annualKwh:12000,annualBillMxn:45000,targetOffsetPct:90}).id).toBe('SOL-2026-0999'));
  it('proposal version schema preserves canonical IDs',()=>expect(proposalVersionSchema.parse({proposalId:'proposal-v2',versionNumber:2,status:'Exported',canonicalSnapshot:{projectId:'SOL-2026-0184'},brandingSnapshot:{displayName:'Brand'},locale:'es-MX'}).proposalId).toBe('proposal-v2'));
  it('legacy migration format is versioned',()=>expect(migrationPreviewSchema.parse({formatVersion:1,legacyWorkspaceId:'default',projectId:'SOL-X',records:{r1:{}}}).formatVersion).toBe(1));
 });

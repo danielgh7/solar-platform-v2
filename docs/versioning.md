@@ -1,0 +1,2 @@
+# Versioning
+R7.1 application version is 0.7.1. Web/mobile/desktop read one package version. Native build numbers are CI run numbers. API compatibility generation is 7.1; incompatible clients must be upgrade-gated before writes. Database migrations remain backward-safe for supported clients. Desktop updates use signed Tauri updater releases only after signing infrastructure exists; mobile updates use App Store/Play Store releases.
