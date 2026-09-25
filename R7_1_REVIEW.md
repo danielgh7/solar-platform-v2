@@ -4,36 +4,36 @@ Status: **ready for formal audit** on `r7.1-issue-11`. R8 has not started. Solar
 
 ## Audited candidate
 
-- Candidate SHA: `4fc306d5134ab370556bf3d36298ce3493e83ea8`
-- Workflow run: [35356408860](https://github.com/danielgh7/solar-platform-v2/actions/runs/35356408860)
+- Candidate SHA: `7e34aeeb7bcc67b3cc86ae1fa54fc9b6472addcf`
+- Workflow run: [36046515272](https://github.com/danielgh7/solar-platform-v2/actions/runs/36046515272)
 - Result: **success**
 - Jobs: `regression`, `android`, `android-runtime (pixel_7)`, `android-runtime (pixel_tablet)`, `ios`, `desktop (windows-2025)`, `desktop (macos-15)`, and `manifest` all completed successfully.
-- Final artifact manifest: `r7-1-final-manifest`, artifact ID `10552940271`, archive digest `sha256:e169e4be3673c148fdd3dd5ad3edc1d1e01fdf1efaae6e6b0013d9bd7d3712b2`.
-- `artifact-manifest.json` identifies candidate `4fc306d5134ab370556bf3d36298ce3493e83ea8` and run `35356408860`.
+- Final artifact manifest: `r7-1-final-manifest`, artifact ID `10829456504`, archive digest `sha256:4ebc8d181dfc4230c3ae9505e756ea76cf5cc88078e2491e4a4ac8f123c2d1d2`.
+- `artifact-manifest.json` identifies candidate `7e34aeeb7bcc67b3cc86ae1fa54fc9b6472addcf` and run `36046515272`.
 - Manifest integrity: 94 files and 94 SHA-256 entries. The manifest gate downloaded all nine upstream artifacts, required each platform deliverable individually, and completed successfully.
 
 Representative final artifacts:
 
 | Artifact | Evidence | SHA-256 |
 |---|---|---|
-| Android APK | `android-builds/app/build/outputs/apk/debug/app-debug.apk` | `8e9e0a6d8cbc8becea786cbf879e2fb69260bea00a42ff8ea952a92c8e621e26` |
-| Android AAB | `android-builds/app/build/outputs/bundle/release/app-release.aab` | `2d0f22b862380810adcddeeaf7e47279bf9c4ed854a67fc0bde192013b39482e` |
-| Windows MSI | `Buenos días sol_0.7.1_x64_en-US.msi` | `fda4d9988b5fc4f385f722ae3271aeec3742c8bcd13b8babc8d34bbc3046f087` |
-| Windows NSIS | `Buenos días sol_0.7.1_x64-setup.exe` | `953dda2bad7c75ef639664c32d02ad6de0e636dd94b467b3f6b8884d67f8c182` |
-| macOS DMG | `Buenos días sol_0.7.1_aarch64.dmg` | `5f9976d075328e649be5006755e9ce1bd444de94f2b2f1355b114c73aab3f001` |
-| Android phone runtime | `android-phone.png` | `eb55336514fa75f4d757073eb85d33029d866eadf87c2c59ca97c1d2a0ef0118` |
-| Android tablet runtime | `android-tablet.png` | `835e64e565ef462ab61dfcec728d6553226b5caa92d41e103766d611fc3572fa` |
-| iPhone Simulator runtime | `ios-iphone.png` | `bc33a0b6358ed3672fcb4ed57b38eafeee703d6dd922d98954ce996228bff00a` |
-| iPad Simulator runtime | `ios-ipad.png` | `7a3c093a9a7fd94d270579a88a7667ed5aaf669a90a7715992fb77e5e2d50d1f` |
-| Windows runtime | `windows-app.png` | `a1b1d24c3650513f7ac6023ba6c656ba8556d998e454f662eec36c5532e2f444` |
-| macOS runtime | `macos-app.png` | `f1ea90ea8622b888428da744ad9767db75505312dfa3400145a6cd6ef6f25e5d` |
+| Android APK | `android-builds/app/build/outputs/apk/debug/app-debug.apk` | `8205de94f6a452a20c274e15208835650acd1df469559ac3592a1bc395625c8a` |
+| Android AAB | `android-builds/app/build/outputs/bundle/release/app-release.aab` | `71f8cccfa684fefdb7bfb949d607ca6874b1db36f525502865445703bde56872` |
+| Windows MSI | `Buenos días sol_0.7.1_x64_en-US.msi` | `606094099a28d4aac9505012a1b9f2f041bb1710f66461068c10bc0e64d216c9` |
+| Windows NSIS | `Buenos días sol_0.7.1_x64-setup.exe` | `0f35143f659f1999100086535289a3224da87d49fd834fbd94c4f6aab6b16082` |
+| macOS DMG | `Buenos días sol_0.7.1_aarch64.dmg` | `2eba3badbbce93e16af83f3a7ad859d9f3e1b0601ed0ff9dbcfc485f182b4ec0` |
+| Android phone runtime | `android-phone.png` | `65cf32b4f89d1e9c4993134a80e1ea18064f72d2150819ef60e57d78c044d307` |
+| Android tablet runtime | `android-tablet.png` | `a37ec690cd4bea7f22df68483aa56a9270f5218a01e7e66bc4b5dce1abe384a9` |
+| iPhone Simulator runtime | `ios-iphone.png` | `65cffc284531d21b5b1bd164d138abe748e52eaea21d2c99dcdba9a52278f642` |
+| iPad Simulator runtime | `ios-ipad.png` | `73ce9af77e806da45a6963770d5f7fef259927b57abbbd67905edbd41ac2517c` |
+| Windows runtime | `windows-app.png` | `3399310f9bb21fb4a127a7c05a3ac1b917ad27b473c6f50ec84f0d49113cc7cb` |
+| macOS runtime | `macos-app.png` | `da54b8b1d8fddedc519c01bb20a9d2c24593a71498f5e3e00fc6961ec23f710d` |
 
 ## Acceptance audit — Issue #11
 
-1. **PASS** — R0.1–R7 regressions are green. Run 35356408860 `regression` completed the full test suite and R7.1 validation.
+1. **PASS** — R0.1–R7 regressions are green. Run 36046515272 `regression` completed the full test suite and R7.1 validation.
 2. **PASS** — Shared architecture is preserved. `docs/multiplatform-architecture.md`; Capacitor and Tauri package the accepted shared React/domain/API application without duplicate engines.
 3. **PASS** — Web production build works. The regression build and `web-dist` artifact succeeded on the audited SHA.
-4. **EXTERNAL BLOCKER** — HTTPS deployment is reproducibly documented in `docs/deployment.md`, but a permanent staging/production hostname, DNS and hosting account action are not available in this repository/session. No live endpoint is claimed.
+4. **PASS** — The real Render deployment at [https://solar-platform-v2.onrender.com](https://solar-platform-v2.onrender.com) was validated on 2026-09-25 against this candidate: Web/PWA and API are served over HTTPS with HSTS; `/api/health` returns `200`; PostgreSQL-backed authentication, migrations, sessions, tenant isolation, RBAC/economics confidentiality, locale persistence, branding and the representative R1–R7 flow work. Project `SOL-2026-206817` was created through the published wizard, reopened with its own persisted R1 baseline, and remained after a hard reload. Approved-origin CORS headers are emitted only for the production origin, an unauthenticated organization request returns `401`, and no application-origin console/API errors were observed.
 5. **PASS** — Production API deployment path is implemented and documented: environment contract, health checks, origin policy, migration order and server build are validated.
 6. **PASS** — PostgreSQL migration path works. The audited regression job starts clean PostgreSQL and passes migrate, seed and `db:validate`.
 7. **PASS** — PWA manifest, icons, install metadata and safe service worker build pass `validate:r7-1`; `web-dist` is retained.
@@ -78,11 +78,11 @@ Representative final artifacts:
 
 ## Result
 
-- **PASS:** 44
-- **EXTERNAL BLOCKER:** 1
+- **PASS:** 45
+- **EXTERNAL BLOCKER:** 0
 - **FAIL:** 0
 - Technical gate: **green**
-- External action still required for a live permanent HTTPS deployment: hosting/account, DNS and hostname configuration.
+- Live deployment validated: [https://solar-platform-v2.onrender.com](https://solar-platform-v2.onrender.com); operational details and evidence are recorded in `docs/deployment.md`.
 - Store publication, trusted Windows signing, Apple distribution signing/notarization and production credentials remain external release actions and are not falsely claimed as completed.
 
 This review is an evidence/documentation record for the audited candidate SHA above. Any later commit containing only this review does not alter candidate code or artifacts; any code change requires a new full gate.
