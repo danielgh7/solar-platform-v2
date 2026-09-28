@@ -4,7 +4,7 @@ services:
     runtime: node
     plan: free
     region: oregon
-    branch: r7.1-issue-11
+    branch: r8-issue-13
     buildCommand: npm install --include=dev --force && npm run build
     startCommand: npm run db:migrate && npm run db:seed && npm start
     healthCheckPath: /api/health
@@ -29,9 +29,17 @@ services:
       - key: API_RATE_LIMIT
         value: 2000
       - key: CLIENT_MIN_VERSION
-        value: 0.7.1
+        value: 0.8.0
       - key: API_COMPATIBILITY
-        value: 7.1
+        value: 8.0
+      - key: AI_PROVIDER
+        value: mock
+      - key: AI_KILL_SWITCH
+        value: false
+      - key: OPENAI_MODEL
+        value: gpt-5.1
+      - key: OPENAI_API_KEY
+        sync: false
 
 databases:
   - name: solar-platform-v2-db

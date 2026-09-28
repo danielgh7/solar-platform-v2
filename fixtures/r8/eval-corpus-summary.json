@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "total": 128,
+  "curatedCritical": 40,
+  "kinds": {
+    "residential": 8,
+    "commercial": 8,
+    "demand": 8,
+    "bimonthly": 8,
+    "monthly": 8,
+    "multipage": 8,
+    "rotated": 8,
+    "skewed": 8,
+    "low-resolution": 8,
+    "mexican-separators": 8,
+    "missing-fields": 8,
+    "contradictory": 8,
+    "duplicate-period": 8,
+    "unusual-charges": 8,
+    "non-cfe": 8,
+    "prompt-injection": 8
+  },
+  "sha256": "353e81c7d7a3cc268d00d5413cc963a43e542c8e9ba852e5cceded1a07fc29cf"
+}

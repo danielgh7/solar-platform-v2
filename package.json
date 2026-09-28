@@ -1,7 +1,7 @@
 {
   "name": "solar-platform-v2",
   "private": true,
-  "version": "0.7.1",
+  "version": "0.8.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -13,6 +13,7 @@
     "db:migrate": "node scripts/db-migrate.mjs",
     "db:seed": "tsx scripts/seed-r7.ts",
     "db:validate": "tsx scripts/validate-r7-db.ts",
+    "db:validate:r8": "tsx scripts/validate-r8-db.ts",
     "preview": "vite preview",
     "capture:r0": "node scripts/capture-r0.mjs",
     "capture:r1": "node scripts/capture-r1.mjs",
@@ -36,6 +37,10 @@
     "native:ios": "npm run build:web && cap sync ios",
     "desktop:build": "tauri build",
     "validate:r7-1": "vitest run src/r7_1 src/platform --passWithNoTests",
+    "fixtures:r8": "node scripts/generate-r8-fixtures.mjs && node scripts/generate-r8-real-fixtures.mjs",
+    "capture:r8": "node scripts/capture-r8.mjs",
+    "validate:r8": "vitest run src/domain/ai server/ai server --passWithNoTests && node --import tsx scripts/validate-r8-evals.ts",
+    "test:r8:real": "vitest run server/ai/openai.real.test.ts --passWithNoTests",
     "tauri": "tauri"
   },
   "dependencies": {

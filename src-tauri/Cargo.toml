@@ -1,6 +1,6 @@
 [package]
 name="buenos-dias-sol"
-version="0.7.1"
+version="0.8.0"
 description="Buenos días sol multiplatform solar application"
 authors=["Enertika"]
 edition="2021"

@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "total": 128,
+  "dangerousFalseNegatives": 0,
+  "falsePositives": 0,
+  "pass": true,
+  "validator": "cfe-v1"
+}

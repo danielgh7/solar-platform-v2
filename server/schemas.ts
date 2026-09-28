@@ -10,3 +10,6 @@ export const proposalVersionSchema=z.object({proposalId:z.string().min(1).max(10
 export const migrationPreviewSchema=z.object({formatVersion:z.literal(1),legacyWorkspaceId:z.string().min(1),projectId:z.string().min(1),records:z.record(z.string(),z.unknown())}).strict();
 export const wonSchema=z.object({expectedVersion:z.number().int().positive(),lossReasonId:z.string().optional(),explicitWin:z.literal(true)}).strict();
 export const handoffUpdateSchema=z.object({expectedVersion:z.number().int().positive(),payload:z.unknown()}).strict();
+export const cfeCorrectionSchema=z.object({fieldPath:z.string().regex(/^[A-Za-z][A-Za-z0-9]{0,79}$/),normalized:z.union([z.string().max(500),z.number().finite(),z.boolean(),z.null()]),reason:z.string().max(500).optional()}).strict();
+export const copilotSchema=z.object({message:z.string().min(1).max(2000),projectId:z.string().max(80).optional(),requestedTool:z.enum(['open-project','create-task','explain-provenance']).optional(),confirmationToken:z.string().max(200).optional()}).strict();
+export const confirmationSchema=z.object({action:z.literal('create-task'),resourceId:z.string().min(1).max(100)}).strict();

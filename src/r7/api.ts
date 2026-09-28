@@ -1,4 +1,4 @@
-export type ApiErrorCode='UNAUTHENTICATED'|'SESSION_EXPIRED_OR_FORBIDDEN'|'FORBIDDEN'|'VALIDATION_ERROR'|'CONFLICT'|'IMMUTABLE'|'NOT_FOUND'|'INTERNAL_ERROR'|'NETWORK_ERROR'|'ORIGIN_REJECTED'|'INVALID_CREDENTIALS';
+export type ApiErrorCode='UNAUTHENTICATED'|'SESSION_EXPIRED_OR_FORBIDDEN'|'FORBIDDEN'|'VALIDATION_ERROR'|'CONFLICT'|'IMMUTABLE'|'NOT_FOUND'|'INTERNAL_ERROR'|'NETWORK_ERROR'|'ORIGIN_REJECTED'|'INVALID_CREDENTIALS'|'AI_DISABLED'|'AI_BUDGET_EXCEEDED'|'CONFIRMATION_REQUIRED';
 export class ApiError extends Error{constructor(public code:ApiErrorCode,public status:number,public detail?:unknown){super(code)}}
 const configured=import.meta.env.VITE_API_URL;
 const base=configured||'';
@@ -9,4 +9,15 @@ export const api={
  projects:(org:string)=>request<any[]>(`/api/orgs/${org}/projects`),createProject:(org:string,input:any)=>request<any>(`/api/orgs/${org}/projects`,{method:'POST',body:JSON.stringify(input)}),projectState:(org:string,projectId:string)=>request<any>(`/api/orgs/${org}/projects/${projectId}/state`),saveProjectState:(org:string,projectId:string,state:any)=>request<any>(`/api/orgs/${org}/projects/${projectId}/state`,{method:'PUT',body:JSON.stringify(state)}),economics:(org:string,projectId:string)=>request<any>(`/api/orgs/${org}/projects/${projectId}/economics`),
  migrationPreview:(org:string,payload:any)=>request<any>(`/api/orgs/${org}/migrations/legacy/preview`,{method:'POST',body:JSON.stringify(payload)}),migrationImport:(org:string,payload:any)=>request<any>(`/api/orgs/${org}/migrations/legacy/import`,{method:'POST',body:JSON.stringify(payload)}),
  uploadLogo:async(org:string,file:File)=>{const data=new FormData();data.append('logo',file);let r:Response;try{r=await fetch(`${base}/api/orgs/${org}/branding/logo`,{method:'POST',credentials:'include',body:data})}catch(e){throw new ApiError('NETWORK_ERROR',0,e)}const body=await r.json().catch(()=>null);if(!r.ok)throw new ApiError(body?.error?.code||'INTERNAL_ERROR',r.status,body?.error);return body},assetUrl:(org:string,id:string)=>`${base}/api/orgs/${org}/assets/${id}`,
+ aiDocuments:(org:string,projectId?:string)=>request<any[]>(`/api/orgs/${org}/ai/documents${projectId?`?projectId=${encodeURIComponent(projectId)}`:''}`),
+ uploadBill:async(org:string,file:File,projectId?:string)=>{const data=new FormData();data.append('document',file);if(projectId)data.append('projectId',projectId);let r:Response;try{r=await fetch(`${base}/api/orgs/${org}/ai/documents`,{method:'POST',credentials:'include',body:data})}catch(e){throw new ApiError('NETWORK_ERROR',0,e)}const body=await r.json().catch(()=>null);if(!r.ok)throw new ApiError(body?.error?.code||'INTERNAL_ERROR',r.status,body?.error);return body},
+ extractBill:(org:string,id:string)=>request<any>(`/api/orgs/${org}/ai/documents/${id}/extract`,{method:'POST'}),
+ correctBillField:(org:string,id:string,input:any)=>request<any>(`/api/orgs/${org}/ai/documents/${id}/fields`,{method:'PATCH',body:JSON.stringify(input)}),
+ acceptBill:(org:string,id:string)=>request<any>(`/api/orgs/${org}/ai/documents/${id}/accept`,{method:'POST'}),
+ billContentUrl:(org:string,id:string)=>`${base}/api/orgs/${org}/ai/documents/${id}/content`,
+ projectIntelligence:(org:string,projectId:string)=>request<any>(`/api/orgs/${org}/ai/projects/${projectId}/intelligence`),
+ prepareSolarProject:(org:string,projectId:string,idempotencyKey:string)=>request<any>(`/api/orgs/${org}/ai/projects/${projectId}/prepare`,{method:'POST',headers:{'Idempotency-Key':idempotencyKey}}),
+ aiUsage:(org:string)=>request<any[]>(`/api/orgs/${org}/ai/usage`),
+ copilot:(org:string,input:any)=>request<any>(`/api/orgs/${org}/ai/copilot`,{method:'POST',body:JSON.stringify(input)}),
+ createAiConfirmation:(org:string,input:any)=>request<any>(`/api/orgs/${org}/ai/confirmations`,{method:'POST',body:JSON.stringify(input)}),
 };

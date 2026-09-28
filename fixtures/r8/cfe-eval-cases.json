@@ -1,0 +1,2919 @@
+{
+  "schemaVersion": 1,
+  "description": "Synthetic CFE-like evaluation matrix. Contains no customer data.",
+  "count": 128,
+  "cases": [
+    {
+      "id": "r8-cfe-001",
+      "kind": "residential",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8000
+    },
+    {
+      "id": "r8-cfe-002",
+      "kind": "commercial",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8001
+    },
+    {
+      "id": "r8-cfe-003",
+      "kind": "demand",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8002
+    },
+    {
+      "id": "r8-cfe-004",
+      "kind": "bimonthly",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8003
+    },
+    {
+      "id": "r8-cfe-005",
+      "kind": "monthly",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8004
+    },
+    {
+      "id": "r8-cfe-006",
+      "kind": "multipage",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 3
+      },
+      "seed": 8005
+    },
+    {
+      "id": "r8-cfe-007",
+      "kind": "rotated",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 90,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8006
+    },
+    {
+      "id": "r8-cfe-008",
+      "kind": "skewed",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 3,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8007
+    },
+    {
+      "id": "r8-cfe-009",
+      "kind": "low-resolution",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 72,
+        "pages": 1
+      },
+      "seed": 8008
+    },
+    {
+      "id": "r8-cfe-010",
+      "kind": "mexican-separators",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8009
+    },
+    {
+      "id": "r8-cfe-011",
+      "kind": "missing-fields",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8010
+    },
+    {
+      "id": "r8-cfe-012",
+      "kind": "contradictory",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8011
+    },
+    {
+      "id": "r8-cfe-013",
+      "kind": "duplicate-period",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8012
+    },
+    {
+      "id": "r8-cfe-014",
+      "kind": "unusual-charges",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8013
+    },
+    {
+      "id": "r8-cfe-015",
+      "kind": "non-cfe",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8014
+    },
+    {
+      "id": "r8-cfe-016",
+      "kind": "prompt-injection",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8015
+    },
+    {
+      "id": "r8-cfe-017",
+      "kind": "residential",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8016
+    },
+    {
+      "id": "r8-cfe-018",
+      "kind": "commercial",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8017
+    },
+    {
+      "id": "r8-cfe-019",
+      "kind": "demand",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8018
+    },
+    {
+      "id": "r8-cfe-020",
+      "kind": "bimonthly",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8019
+    },
+    {
+      "id": "r8-cfe-021",
+      "kind": "monthly",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8020
+    },
+    {
+      "id": "r8-cfe-022",
+      "kind": "multipage",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 3
+      },
+      "seed": 8021
+    },
+    {
+      "id": "r8-cfe-023",
+      "kind": "rotated",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 90,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8022
+    },
+    {
+      "id": "r8-cfe-024",
+      "kind": "skewed",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 3,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8023
+    },
+    {
+      "id": "r8-cfe-025",
+      "kind": "low-resolution",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 72,
+        "pages": 1
+      },
+      "seed": 8024
+    },
+    {
+      "id": "r8-cfe-026",
+      "kind": "mexican-separators",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8025
+    },
+    {
+      "id": "r8-cfe-027",
+      "kind": "missing-fields",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8026
+    },
+    {
+      "id": "r8-cfe-028",
+      "kind": "contradictory",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8027
+    },
+    {
+      "id": "r8-cfe-029",
+      "kind": "duplicate-period",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8028
+    },
+    {
+      "id": "r8-cfe-030",
+      "kind": "unusual-charges",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8029
+    },
+    {
+      "id": "r8-cfe-031",
+      "kind": "non-cfe",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8030
+    },
+    {
+      "id": "r8-cfe-032",
+      "kind": "prompt-injection",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8031
+    },
+    {
+      "id": "r8-cfe-033",
+      "kind": "residential",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8032
+    },
+    {
+      "id": "r8-cfe-034",
+      "kind": "commercial",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8033
+    },
+    {
+      "id": "r8-cfe-035",
+      "kind": "demand",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8034
+    },
+    {
+      "id": "r8-cfe-036",
+      "kind": "bimonthly",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8035
+    },
+    {
+      "id": "r8-cfe-037",
+      "kind": "monthly",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8036
+    },
+    {
+      "id": "r8-cfe-038",
+      "kind": "multipage",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 3
+      },
+      "seed": 8037
+    },
+    {
+      "id": "r8-cfe-039",
+      "kind": "rotated",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 90,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8038
+    },
+    {
+      "id": "r8-cfe-040",
+      "kind": "skewed",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 3,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8039
+    },
+    {
+      "id": "r8-cfe-041",
+      "kind": "low-resolution",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 72,
+        "pages": 1
+      },
+      "seed": 8040
+    },
+    {
+      "id": "r8-cfe-042",
+      "kind": "mexican-separators",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8041
+    },
+    {
+      "id": "r8-cfe-043",
+      "kind": "missing-fields",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8042
+    },
+    {
+      "id": "r8-cfe-044",
+      "kind": "contradictory",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8043
+    },
+    {
+      "id": "r8-cfe-045",
+      "kind": "duplicate-period",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8044
+    },
+    {
+      "id": "r8-cfe-046",
+      "kind": "unusual-charges",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8045
+    },
+    {
+      "id": "r8-cfe-047",
+      "kind": "non-cfe",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8046
+    },
+    {
+      "id": "r8-cfe-048",
+      "kind": "prompt-injection",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8047
+    },
+    {
+      "id": "r8-cfe-049",
+      "kind": "residential",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8048
+    },
+    {
+      "id": "r8-cfe-050",
+      "kind": "commercial",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8049
+    },
+    {
+      "id": "r8-cfe-051",
+      "kind": "demand",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8050
+    },
+    {
+      "id": "r8-cfe-052",
+      "kind": "bimonthly",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8051
+    },
+    {
+      "id": "r8-cfe-053",
+      "kind": "monthly",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8052
+    },
+    {
+      "id": "r8-cfe-054",
+      "kind": "multipage",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 3
+      },
+      "seed": 8053
+    },
+    {
+      "id": "r8-cfe-055",
+      "kind": "rotated",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 90,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8054
+    },
+    {
+      "id": "r8-cfe-056",
+      "kind": "skewed",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 3,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8055
+    },
+    {
+      "id": "r8-cfe-057",
+      "kind": "low-resolution",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 72,
+        "pages": 1
+      },
+      "seed": 8056
+    },
+    {
+      "id": "r8-cfe-058",
+      "kind": "mexican-separators",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8057
+    },
+    {
+      "id": "r8-cfe-059",
+      "kind": "missing-fields",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8058
+    },
+    {
+      "id": "r8-cfe-060",
+      "kind": "contradictory",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8059
+    },
+    {
+      "id": "r8-cfe-061",
+      "kind": "duplicate-period",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8060
+    },
+    {
+      "id": "r8-cfe-062",
+      "kind": "unusual-charges",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8061
+    },
+    {
+      "id": "r8-cfe-063",
+      "kind": "non-cfe",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8062
+    },
+    {
+      "id": "r8-cfe-064",
+      "kind": "prompt-injection",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8063
+    },
+    {
+      "id": "r8-cfe-065",
+      "kind": "residential",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8064
+    },
+    {
+      "id": "r8-cfe-066",
+      "kind": "commercial",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8065
+    },
+    {
+      "id": "r8-cfe-067",
+      "kind": "demand",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8066
+    },
+    {
+      "id": "r8-cfe-068",
+      "kind": "bimonthly",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8067
+    },
+    {
+      "id": "r8-cfe-069",
+      "kind": "monthly",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8068
+    },
+    {
+      "id": "r8-cfe-070",
+      "kind": "multipage",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 3
+      },
+      "seed": 8069
+    },
+    {
+      "id": "r8-cfe-071",
+      "kind": "rotated",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 90,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8070
+    },
+    {
+      "id": "r8-cfe-072",
+      "kind": "skewed",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 3,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8071
+    },
+    {
+      "id": "r8-cfe-073",
+      "kind": "low-resolution",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 72,
+        "pages": 1
+      },
+      "seed": 8072
+    },
+    {
+      "id": "r8-cfe-074",
+      "kind": "mexican-separators",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8073
+    },
+    {
+      "id": "r8-cfe-075",
+      "kind": "missing-fields",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8074
+    },
+    {
+      "id": "r8-cfe-076",
+      "kind": "contradictory",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8075
+    },
+    {
+      "id": "r8-cfe-077",
+      "kind": "duplicate-period",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8076
+    },
+    {
+      "id": "r8-cfe-078",
+      "kind": "unusual-charges",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8077
+    },
+    {
+      "id": "r8-cfe-079",
+      "kind": "non-cfe",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8078
+    },
+    {
+      "id": "r8-cfe-080",
+      "kind": "prompt-injection",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8079
+    },
+    {
+      "id": "r8-cfe-081",
+      "kind": "residential",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8080
+    },
+    {
+      "id": "r8-cfe-082",
+      "kind": "commercial",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8081
+    },
+    {
+      "id": "r8-cfe-083",
+      "kind": "demand",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8082
+    },
+    {
+      "id": "r8-cfe-084",
+      "kind": "bimonthly",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8083
+    },
+    {
+      "id": "r8-cfe-085",
+      "kind": "monthly",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8084
+    },
+    {
+      "id": "r8-cfe-086",
+      "kind": "multipage",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 3
+      },
+      "seed": 8085
+    },
+    {
+      "id": "r8-cfe-087",
+      "kind": "rotated",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 90,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8086
+    },
+    {
+      "id": "r8-cfe-088",
+      "kind": "skewed",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 3,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8087
+    },
+    {
+      "id": "r8-cfe-089",
+      "kind": "low-resolution",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 72,
+        "pages": 1
+      },
+      "seed": 8088
+    },
+    {
+      "id": "r8-cfe-090",
+      "kind": "mexican-separators",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8089
+    },
+    {
+      "id": "r8-cfe-091",
+      "kind": "missing-fields",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8090
+    },
+    {
+      "id": "r8-cfe-092",
+      "kind": "contradictory",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8091
+    },
+    {
+      "id": "r8-cfe-093",
+      "kind": "duplicate-period",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8092
+    },
+    {
+      "id": "r8-cfe-094",
+      "kind": "unusual-charges",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8093
+    },
+    {
+      "id": "r8-cfe-095",
+      "kind": "non-cfe",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8094
+    },
+    {
+      "id": "r8-cfe-096",
+      "kind": "prompt-injection",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8095
+    },
+    {
+      "id": "r8-cfe-097",
+      "kind": "residential",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8096
+    },
+    {
+      "id": "r8-cfe-098",
+      "kind": "commercial",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8097
+    },
+    {
+      "id": "r8-cfe-099",
+      "kind": "demand",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8098
+    },
+    {
+      "id": "r8-cfe-100",
+      "kind": "bimonthly",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8099
+    },
+    {
+      "id": "r8-cfe-101",
+      "kind": "monthly",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8100
+    },
+    {
+      "id": "r8-cfe-102",
+      "kind": "multipage",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 3
+      },
+      "seed": 8101
+    },
+    {
+      "id": "r8-cfe-103",
+      "kind": "rotated",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 90,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8102
+    },
+    {
+      "id": "r8-cfe-104",
+      "kind": "skewed",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 3,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8103
+    },
+    {
+      "id": "r8-cfe-105",
+      "kind": "low-resolution",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 72,
+        "pages": 1
+      },
+      "seed": 8104
+    },
+    {
+      "id": "r8-cfe-106",
+      "kind": "mexican-separators",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8105
+    },
+    {
+      "id": "r8-cfe-107",
+      "kind": "missing-fields",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8106
+    },
+    {
+      "id": "r8-cfe-108",
+      "kind": "contradictory",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8107
+    },
+    {
+      "id": "r8-cfe-109",
+      "kind": "duplicate-period",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8108
+    },
+    {
+      "id": "r8-cfe-110",
+      "kind": "unusual-charges",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8109
+    },
+    {
+      "id": "r8-cfe-111",
+      "kind": "non-cfe",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8110
+    },
+    {
+      "id": "r8-cfe-112",
+      "kind": "prompt-injection",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8111
+    },
+    {
+      "id": "r8-cfe-113",
+      "kind": "residential",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8112
+    },
+    {
+      "id": "r8-cfe-114",
+      "kind": "commercial",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8113
+    },
+    {
+      "id": "r8-cfe-115",
+      "kind": "demand",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8114
+    },
+    {
+      "id": "r8-cfe-116",
+      "kind": "bimonthly",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8115
+    },
+    {
+      "id": "r8-cfe-117",
+      "kind": "monthly",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8116
+    },
+    {
+      "id": "r8-cfe-118",
+      "kind": "multipage",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 3
+      },
+      "seed": 8117
+    },
+    {
+      "id": "r8-cfe-119",
+      "kind": "rotated",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 90,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8118
+    },
+    {
+      "id": "r8-cfe-120",
+      "kind": "skewed",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 3,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8119
+    },
+    {
+      "id": "r8-cfe-121",
+      "kind": "low-resolution",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 72,
+        "pages": 1
+      },
+      "seed": 8120
+    },
+    {
+      "id": "r8-cfe-122",
+      "kind": "mexican-separators",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8121
+    },
+    {
+      "id": "r8-cfe-123",
+      "kind": "missing-fields",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8122
+    },
+    {
+      "id": "r8-cfe-124",
+      "kind": "contradictory",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8123
+    },
+    {
+      "id": "r8-cfe-125",
+      "kind": "duplicate-period",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8124
+    },
+    {
+      "id": "r8-cfe-126",
+      "kind": "unusual-charges",
+      "synthetic": true,
+      "expected": {
+        "route": "accept",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8125
+    },
+    {
+      "id": "r8-cfe-127",
+      "kind": "non-cfe",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8126
+    },
+    {
+      "id": "r8-cfe-128",
+      "kind": "prompt-injection",
+      "synthetic": true,
+      "expected": {
+        "route": "review",
+        "criticalFields": [
+          "serviceNumber",
+          "periodStart",
+          "periodEnd",
+          "tariff",
+          "consumptionKwh",
+          "totalBill"
+        ]
+      },
+      "transform": {
+        "rotation": 0,
+        "skew": 0,
+        "resolution": 300,
+        "pages": 1
+      },
+      "seed": 8127
+    }
+  ]
+}
