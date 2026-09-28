@@ -8,6 +8,13 @@ CREATE TABLE organization_ai_config(
   per_operation_usd numeric(10,4) NOT NULL DEFAULT 1 CHECK(per_operation_usd>=0), daily_usd numeric(10,2) NOT NULL DEFAULT 10 CHECK(daily_usd>=0), monthly_usd numeric(10,2) NOT NULL DEFAULT 100 CHECK(monthly_usd>=0),
   retention_days integer NOT NULL DEFAULT 365 CHECK(retention_days BETWEEN 1 AND 3650), updated_at timestamptz NOT NULL DEFAULT now(), version integer NOT NULL DEFAULT 1
 );
+CREATE OR REPLACE FUNCTION ensure_organization_ai_config() RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
+  INSERT INTO organization_ai_config(organization_id) VALUES(NEW.id) ON CONFLICT DO NOTHING;
+  RETURN NEW;
+END;
+$$;
+CREATE TRIGGER organizations_ai_config_after_insert AFTER INSERT ON organizations FOR EACH ROW EXECUTE FUNCTION ensure_organization_ai_config();
 CREATE TABLE utility_documents(
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(), organization_id uuid NOT NULL REFERENCES organizations(id) ON DELETE CASCADE, project_id text REFERENCES projects(id) ON DELETE SET NULL,
   filename text NOT NULL, mime_type text NOT NULL CHECK(mime_type IN ('application/pdf','image/jpeg','image/png')), byte_size integer NOT NULL CHECK(byte_size>0 AND byte_size<=15728640), page_count integer,
