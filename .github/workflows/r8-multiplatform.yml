@@ -33,6 +33,18 @@ jobs:
       - run: node scripts/generate-r7-1-icons.mjs
       - run: cp src-tauri/icons/192x192.png public/pwa-192x192.png && cp src-tauri/icons/512x512.png public/pwa-512x512.png
       - run: npm run db:migrate && npm run db:seed && npm test && npm run db:validate && npm run db:validate:r8 && npm run validate:r8 && npm run build
+      - name: Validate R7.1 database upgrade to R8
+        shell: bash
+        run: |
+          export PGPASSWORD=solar_ci
+          createdb -h 127.0.0.1 -U solar solar_platform_v2_upgrade
+          export DATABASE_URL=postgres://solar:solar_ci@127.0.0.1:5432/solar_platform_v2_upgrade
+          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f db/migrations/001_r7_foundation.sql
+          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f db/migrations/002_r7_owner_mapping.sql
+          npm run db:seed
+          npm run db:migrate
+          npm run db:validate
+          npm run db:validate:r8
       - run: test -z "$(grep -R -E 'DATABASE_URL|SESSION_SECRET|R7_SEED_PASSWORD' dist 2>/dev/null || true)"
       - run: npm run validate:r7-1
       - run: npx playwright install --with-deps chromium

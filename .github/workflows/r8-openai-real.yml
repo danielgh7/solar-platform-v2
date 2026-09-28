@@ -1,0 +1,29 @@
+name: R8 authorized OpenAI evals
+on:
+  workflow_dispatch:
+jobs:
+  real-provider:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'gpt-6-luna' }}
+      RUN_OPENAI_REAL_EVALS: 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - name: Require securely configured provider secret
+        shell: bash
+        run: test -n "$OPENAI_API_KEY" || { echo "::error title=Missing authorized secret::Configure OPENAI_API_KEY as a GitHub Actions secret; never paste it into logs or source."; exit 1; }
+      - run: npm install
+      - name: Run synthetic multimodal provider evals
+        run: npm run test:r8:real -- --reporter=json --outputFile=artifacts/r8/openai-real-results.json
+      - name: Create redacted evidence checksum
+        run: sha256sum artifacts/r8/openai-real-results.json > artifacts/r8/openai-real-SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: r8-openai-real-evidence
+          path: |
+            artifacts/r8/openai-real-results.json
+            artifacts/r8/openai-real-SHA256SUMS.txt
