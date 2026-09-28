@@ -16,6 +16,7 @@ export const api={
  acceptBill:(org:string,id:string)=>request<any>(`/api/orgs/${org}/ai/documents/${id}/accept`,{method:'POST'}),
  billContentUrl:(org:string,id:string)=>`${base}/api/orgs/${org}/ai/documents/${id}/content`,
  projectIntelligence:(org:string,projectId:string)=>request<any>(`/api/orgs/${org}/ai/projects/${projectId}/intelligence`),
+ addManualHistory:(org:string,projectId:string,input:any)=>request<any>(`/api/orgs/${org}/ai/projects/${projectId}/history`,{method:'POST',body:JSON.stringify(input)}),
  prepareSolarProject:(org:string,projectId:string,idempotencyKey:string)=>request<any>(`/api/orgs/${org}/ai/projects/${projectId}/prepare`,{method:'POST',headers:{'Idempotency-Key':idempotencyKey}}),
  aiUsage:(org:string)=>request<any[]>(`/api/orgs/${org}/ai/usage`),
  copilot:(org:string,input:any)=>request<any>(`/api/orgs/${org}/ai/copilot`,{method:'POST',body:JSON.stringify(input)}),
