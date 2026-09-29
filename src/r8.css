@@ -2,4 +2,6 @@
 @media(max-width:900px){.r8-hero{align-items:stretch;flex-direction:column}.review-layout{grid-template-columns:1fr}.document-preview iframe{height:420px}.r8-grid,.scenario-grid{grid-template-columns:1fr}.metric-row{grid-template-columns:1fr 1fr}.readiness>div{grid-template-columns:1fr 1fr}}
 @media(max-width:560px){.r8-page{padding:15px}.r8-hero h1{font-size:26px}.metric-row{grid-template-columns:1fr}.review-layout{display:flex;flex-direction:column}.document-preview{order:3}.document-preview iframe{height:300px}}
 .billing-context{display:grid;gap:4px;margin:14px 0;padding:12px;border:1px solid #dce4e2;background:#f5f7f6}
+.ai-config{display:grid;grid-template-columns:repeat(3,minmax(140px,1fr)) auto;gap:12px;align-items:end;margin:18px 0;padding:16px;background:#f5f7f6}.ai-config label{display:grid;gap:5px}.ai-config select,.ai-config input{padding:9px}.ai-config small{grid-column:1/-1}
+@media(max-width:900px){.ai-config{grid-template-columns:1fr}}
 .extracted-field{display:grid;grid-template-columns:1fr auto;gap:4px 10px;padding:12px 0;border-bottom:1px solid #e3e9e7}.extracted-field>div{display:flex;gap:8px;flex-wrap:wrap}.extracted-field small,.extracted-field em{grid-column:1/2;color:#61706c;font-size:11px}.extracted-field em{font-style:normal;color:#315e54}.extracted-field button{grid-column:2;grid-row:1/4;align-self:center}

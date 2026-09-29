@@ -19,6 +19,8 @@ export const api={
  addManualHistory:(org:string,projectId:string,input:any)=>request<any>(`/api/orgs/${org}/ai/projects/${projectId}/history`,{method:'POST',body:JSON.stringify(input)}),
  prepareSolarProject:(org:string,projectId:string,idempotencyKey:string)=>request<any>(`/api/orgs/${org}/ai/projects/${projectId}/prepare`,{method:'POST',headers:{'Idempotency-Key':idempotencyKey}}),
  aiUsage:(org:string)=>request<any[]>(`/api/orgs/${org}/ai/usage`),
+ aiConfig:(org:string)=>request<any>(`/api/orgs/${org}/ai/config`),
+ updateAIConfig:(org:string,input:any)=>request<any>(`/api/orgs/${org}/ai/config`,{method:'PUT',body:JSON.stringify(input)}),
  copilot:(org:string,input:any)=>request<any>(`/api/orgs/${org}/ai/copilot`,{method:'POST',body:JSON.stringify(input)}),
  createAiConfirmation:(org:string,input:any)=>request<any>(`/api/orgs/${org}/ai/confirmations`,{method:'POST',body:JSON.stringify(input)}),
 };
